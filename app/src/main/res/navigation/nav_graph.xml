@@ -2,10 +2,18 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/welcome_fragment">
 
     <fragment
-        android:id="@+id/loginFragment"
+        android:id="@+id/login_fragment"
         android:name="com.checkmooney.naeats.login.LoginFragment"
-        android:label="LoginFragment" />
+        android:label="Login" />
+    <fragment
+        android:id="@+id/main_fragment"
+        android:name="com.checkmooney.naeats.main.MainFragment"
+        android:label="Main" />
+    <fragment
+        android:id="@+id/welcome_fragment"
+        android:name="com.checkmooney.naeats.login.WelcomeFragment"
+        android:label="Welcome" />
 </navigation>

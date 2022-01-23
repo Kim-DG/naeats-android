@@ -1,25 +1,21 @@
 package com.checkmooney.naeats
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.checkmooney.naeats.components.NaEatsScaffold
-import com.checkmooney.naeats.ui.theme.NaEatsTheme
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
+import com.checkmooney.naeats.databinding.ContentMainBinding
+import com.google.android.material.navigation.NavigationView
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+    private lateinit var viewBinding: ContentMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContent {
-            NaEatsApp()
-        }
+        viewBinding = ContentMainBinding.inflate(layoutInflater)
+        setContentView(viewBinding.root)
+        val navView: NavigationView = viewBinding.navView
+        val navController = findNavController(viewBinding.navHostFragment.id)
+        navView.setupWithNavController(navController)
     }
 }
