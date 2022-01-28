@@ -19,7 +19,7 @@ val Typography = Typography(
         ),
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
-    )
+    ),
     /* Other default text styles to override
     button = TextStyle(
         fontFamily = FontFamily.Default,
@@ -32,4 +32,15 @@ val Typography = Typography(
         fontSize = 12.sp
     )
     */
+)
+
+val mainText = TextStyle(
+    fontFamily = FontFamily(
+        Font(
+            R.font.cafe24surround_air,
+            FontWeight.Normal
+        )
+    ),
+    fontWeight = FontWeight.Normal,
+    fontSize = 25.sp
 )
