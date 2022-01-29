@@ -1,5 +1,7 @@
 package com.checkmooney.naeats.ui.theme
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
@@ -48,4 +50,6 @@ val titleText = TextStyle(
     fontSize = 25.sp
 )
 
-val titleModifier = Modifier.padding(start = 24.dp, top = 64.dp, bottom =64.dp)
+val titleModifier = Modifier.padding(start = 24.dp, top = 108.dp, bottom = 32.dp)
+
+val pinkBgModifier = Modifier.background(color = ThemePink).fillMaxWidth()
