@@ -11,6 +11,9 @@ fun Fragment.navigate(to: Screen, from: Screen) {
         throw InvalidParameterException("Can't navigate to $to")
     }
     when (to) {
+        Screen.Welcome -> {
+            findNavController().navigate(R.id.welcome_fragment)
+        }
         Screen.Login -> {
             findNavController().navigate(R.id.login_fragment)
         }
