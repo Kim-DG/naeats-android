@@ -24,11 +24,6 @@ import com.checkmooney.naeats.ui.theme.*
 fun TodayRecommend() {
     Scaffold {
         Column {
-            Text(
-                text = "오늘의 추천 메뉴",
-                style = titleText,
-                modifier = titleModifier,
-            )
             RecommendIcon()
         }
     }
