@@ -15,10 +15,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
 import com.checkmooney.naeats.R
@@ -53,7 +57,11 @@ fun BottomNavigationBar(
                     selected = selectedItem == item,
                     onClick = { onClick(item) },
                     icon = {
-                        Text(text = item.title, textAlign = TextAlign.Center)
+                        Text(
+                            text = item.title,
+                            textAlign = TextAlign.Center,
+                            style = TextStyle(fontFamily = FontFamily(Font(R.font.cafe24surround_air)), fontSize = 12.sp)
+                        )
                     },
                     selectedContentColor = BottomTextPink,
                     unselectedContentColor = BottomTextGrey

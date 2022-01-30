@@ -39,7 +39,7 @@ class MainFragment : Fragment() {
                         }) {
                         when (currentViewItem) {
                             Recommend -> {
-                                Text(text = "recommend")
+                                TodayRecommend()
                             }
                             TodayEats -> {
                                 Text(text = "today eats")
