@@ -63,7 +63,7 @@ fun NaEatsScaffold(
 @Preview
 @Composable
 fun scaffoldPreview() {
-    NaEatsScaffold(topBar = { TopBar(title = "오늘의 추천 메뉴")}, bottomBar = { BottomNavigationBar()}) {
-
+    NaEatsScaffold() {
+        
     }
 }
