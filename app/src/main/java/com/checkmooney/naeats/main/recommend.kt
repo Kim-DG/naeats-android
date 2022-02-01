@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.checkmooney.naeats.R
-import com.checkmooney.naeats.models.MenuCategoryList
+import com.checkmooney.naeats.models.Category
 import com.checkmooney.naeats.ui.theme.*
 
 
@@ -78,11 +78,12 @@ fun MenuCategory(selectRecommend: Int) {
             edgePadding = 0.dp
         ) {
 
-            MenuCategoryList.MenuCategoryList.forEachIndexed { index, text ->
+            val categoryList = Category.values().toList()
+            categoryList.forEachIndexed { index, text ->
                 Tab(
                     text = {
                         Text(
-                            text = text, fontFamily = FontFamily(
+                            text = text.title, fontFamily = FontFamily(
                                 Font(
                                     R.font.cafe24surround_air,
                                 )
