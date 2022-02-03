@@ -37,7 +37,7 @@ import com.checkmooney.naeats.ui.theme.NaEatsTheme
 enum class NavigationItem(var route: String, var title: String, var description: String) {
     Recommend("recommend", "Today\nrecommend", "오늘의 추천 메뉴"),
     TodayEats("today", "Today\neats", "오늘 먹은 음식"),
-    Preference("preference", "Preference", "선호 음식 선택")
+    Setting("setting", "Setting", "    설     정")
 }
 
 @Preview

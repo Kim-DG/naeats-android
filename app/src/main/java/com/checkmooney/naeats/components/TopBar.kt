@@ -21,8 +21,8 @@ fun TopBar(title: String) {
     ) {
         Text(
             text = title,
-            modifier = Modifier.padding(vertical = 20.dp, horizontal = 8.dp),
-            fontSize = 20.sp
+            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 80.dp, bottom = 20.dp),
+            fontSize = 25.sp
         )
     }
 }

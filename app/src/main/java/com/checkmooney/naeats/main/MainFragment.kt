@@ -27,7 +27,7 @@ class MainFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                var currentViewItem by rememberSaveable { mutableStateOf(NavigationItem.Recommend) }
+                var currentViewItem by rememberSaveable { mutableStateOf(Recommend) }
                 NaEatsTheme {
                     Scaffold(
                         topBar = { TopBar(title = currentViewItem.description) },
@@ -44,8 +44,8 @@ class MainFragment : Fragment() {
                             TodayEats -> {
                                 Text(text = "today eats")
                             }
-                            Preference -> {
-                                Text(text = "preference")
+                            Setting -> {
+                                Setting()
                             }
                         }
                     }

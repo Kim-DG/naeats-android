@@ -8,7 +8,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -77,7 +76,6 @@ fun MenuCategory(selectRecommend: Int) {
             backgroundColor = ThemePink,
             edgePadding = 0.dp
         ) {
-
             val categoryList = Category.values().toList()
             categoryList.forEachIndexed { index, text ->
                 Tab(
@@ -96,23 +94,23 @@ fun MenuCategory(selectRecommend: Int) {
                 )
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(15.dp))
         RecommendWindow(selectRecommend, selectCategory)
     }
 }
 
 @Composable
 fun RecommendWindow(selectRecommend: Int, selectCategory: Int) {
-    val configuration = LocalConfiguration.current
-    val screenHeight = (configuration.screenHeightDp * 0.5).dp
-
-    LazyColumn(
-        modifier = pinkBgModifier.height(screenHeight),
-        verticalArrangement = Arrangement.spacedBy(24.dp)
-    ) {
-        item {
-            Text(text = selectRecommend.toString())
-            Text(text = selectCategory.toString())
+    Column {
+        LazyColumn(
+            modifier = pinkBgModifier.weight(1F),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            item {
+                Text(text = selectRecommend.toString())
+                Text(text = selectCategory.toString())
+            }
         }
+        Spacer(modifier = Modifier.height(72.dp).background(color = Color.White))
     }
 }
