@@ -134,7 +134,7 @@ fun RecommendWindow(selectRecommend: Int, selectCategory: Int) {
         }
         Spacer(
             modifier = Modifier
-                .height(72.dp)
+                .height(12.dp)
                 .background(color = Color.White)
         )
     }
@@ -247,9 +247,7 @@ fun DropDown(isExpanded: MutableState<Boolean>) {
                             .size(30.dp)
                     )
                 }
-
             }
         }
     }
-
 }

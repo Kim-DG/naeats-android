@@ -74,6 +74,12 @@ dependencies {
     implementation Libs.AndroidX.Compose.runtimeLivedata
     implementation Libs.AndroidX.Navigation.compose
 
+    implementation Libs.AndroidX.Retrofit2.retrofit
+    implementation Libs.AndroidX.Retrofit2.converter
+
+    implementation Libs.AndroidX.Okhttp3.okhttp
+    implementation Libs.AndroidX.Okhttp3.logging
+
     implementation Libs.Google.Hilt.hiltAndroid
     kapt Libs.Google.Hilt.Compiler
 

@@ -87,17 +87,17 @@ fun MyFood(name: String) {
             mutableStateOf(false)
         }
         Text(
-            text = name, modifier = Modifier.weight(1F), fontFamily = FontFamily(
+            text = name, modifier = Modifier.weight(1F).align(Alignment.CenterVertically), fontFamily = FontFamily(
                 Font(
                     R.font.cafe24surround_air,
                 ),
-            ), fontSize = 20.sp, color = TextGrey
+            ), fontSize = 15.sp, color = TextGrey
         )
         Icon(
             painter = painterResource(id = R.drawable.delete),
             contentDescription = "delete food",
             tint = ThemeGrey,
-            modifier = Modifier.clickable(onClick = { openDialog.value = true })
+            modifier = Modifier.clickable(onClick = { openDialog.value = true }).size(20.dp)
         )
         if (openDialog.value) {
             Dialog(openDialog) { DeleteDialogContent(openDialog) }
@@ -123,7 +123,7 @@ fun MyInfo(email: String) {
                     Font(
                         R.font.cafe24surround_air,
                     ),
-                ), fontSize = 20.sp, color = TextGrey, textAlign = TextAlign.End
+                ), fontSize = 15.sp, color = TextGrey, textAlign = TextAlign.End
             )
         }
         Surface(
@@ -164,7 +164,7 @@ fun DeleteDialogContent(openDialog: MutableState<Boolean>) {
         Text(
             "삭제하시겠습니까?", textAlign = TextAlign.Center, modifier = Modifier
                 .padding(vertical = 8.dp)
-                .wrapContentSize(), letterSpacing = 1.5.sp
+                .wrapContentSize(), letterSpacing = 1.5.sp, color = TextGrey
         )
         Spacer(
             modifier = Modifier
@@ -197,7 +197,7 @@ fun LogOutDialogContent(openDialog: MutableState<Boolean>) {
         Text(
             "로그아웃하시겠습니까?", textAlign = TextAlign.Center, modifier = Modifier
                 .padding(vertical = 8.dp)
-                .wrapContentSize(), letterSpacing = 1.5.sp
+                .wrapContentSize(), letterSpacing = 1.5.sp, color = TextGrey
         )
         Spacer(
             modifier = Modifier
