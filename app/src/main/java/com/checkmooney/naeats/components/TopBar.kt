@@ -13,6 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.checkmooney.naeats.ui.theme.ThemeGrey
+import com.checkmooney.naeats.ui.theme.titleText
+import java.time.format.TextStyle
 
 @Composable
 fun TopBar(title: String) {
@@ -24,7 +26,7 @@ fun TopBar(title: String) {
         Text(
             text = title,
             modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 80.dp, bottom = 20.dp),
-            fontSize = 25.sp
+            fontSize = 25.sp,
         )
     }
 }

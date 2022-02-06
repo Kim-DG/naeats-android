@@ -100,7 +100,7 @@ fun MyFood(name: String) {
             modifier = Modifier.clickable(onClick = { openDialog.value = true })
         )
         if (openDialog.value) {
-            Dialog(openDialog, "delete")
+            Dialog(openDialog) { DeleteDialogContent(openDialog) }
         }
     }
 
@@ -149,7 +149,7 @@ fun MyInfo(email: String) {
             }
         }
         if (openDialog.value) {
-            Dialog(openDialog, "logout")
+            Dialog(openDialog) { LogOutDialogContent(openDialog) }
         }
     }
 }
@@ -221,19 +221,14 @@ fun LogOutDialogContent(openDialog: MutableState<Boolean>) {
 }
 
 @Composable
-fun Dialog(openDialog: MutableState<Boolean>, dialogName: String) {
+fun Dialog(openDialog: MutableState<Boolean>, content: @Composable () -> Unit) {
     Dialog(onDismissRequest = { openDialog.value = false }) {
         Surface(
             modifier = Modifier
                 .width(240.dp)
                 .wrapContentHeight(), shape = RoundedCornerShape(12.dp), color = ThemePink
         ) {
-            if (dialogName == "delete") {
-                DeleteDialogContent(openDialog)
-            }
-            if (dialogName == "logout") {
-                LogOutDialogContent(openDialog)
-            }
+            content()
         }
     }
 }

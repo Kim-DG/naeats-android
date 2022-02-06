@@ -50,6 +50,4 @@ val titleText = TextStyle(
     fontSize = 25.sp
 )
 
-val titleModifier = Modifier.padding(start = 24.dp, top = 108.dp, bottom = 32.dp)
-
 val pinkBgModifier = Modifier.background(color = ThemePink).fillMaxWidth()
