@@ -4,15 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.checkmooney.naeats.components.BottomNavigationBar
+import com.checkmooney.naeats.components.NaEatsScaffold
 import com.checkmooney.naeats.components.NavigationItem
 import com.checkmooney.naeats.components.NavigationItem.*
 import com.checkmooney.naeats.components.TopBar
@@ -29,7 +33,7 @@ class MainFragment : Fragment() {
             setContent {
                 var currentViewItem by rememberSaveable { mutableStateOf(Recommend) }
                 NaEatsTheme {
-                    Scaffold(
+                    NaEatsScaffold(
                         topBar = { TopBar(title = currentViewItem.description) },
                         bottomBar = {
                             BottomNavigationBar(
@@ -37,15 +41,17 @@ class MainFragment : Fragment() {
                                 onClick = { item -> currentViewItem = item }
                             )
                         }) {
-                        when (currentViewItem) {
-                            Recommend -> {
-                                TodayRecommend()
-                            }
-                            TodayEats -> {
-                                Text(text = "today eats")
-                            }
-                            Setting -> {
-                                Setting()
+                        Box(modifier = Modifier.padding(it)) {
+                            when (currentViewItem) {
+                                Recommend -> {
+                                    TodayRecommend()
+                                }
+                                TodayEats -> {
+                                    TodayEats()
+                                }
+                                Setting -> {
+                                    Setting()
+                                }
                             }
                         }
                     }

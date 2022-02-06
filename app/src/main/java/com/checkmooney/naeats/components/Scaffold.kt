@@ -1,18 +1,11 @@
 package com.checkmooney.naeats.components
 
-import androidx.compose.material.Scaffold
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material.DrawerDefaults
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FabPosition
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -64,6 +57,6 @@ fun NaEatsScaffold(
 @Composable
 fun scaffoldPreview() {
     NaEatsScaffold(topBar = { TopBar(title = "오늘의 추천 메뉴")}, bottomBar = { BottomNavigationBar()}) {
-
+        Text(text = "asdf", modifier = Modifier.background(Color.Blue))
     }
 }
