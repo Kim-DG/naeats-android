@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,7 +39,7 @@ fun Setting() {
 
 @Composable
 fun SettingIcon() {
-    var selectSetting by remember { mutableStateOf(0) }
+    var selectSetting by rememberSaveable { mutableStateOf(0) }
     val icons = listOf(
         painterResource(id = R.drawable.favorite_red),
         painterResource(id = R.drawable.heart_broken_black),
@@ -87,7 +88,9 @@ fun MyFood(name: String) {
             mutableStateOf(false)
         }
         Text(
-            text = name, modifier = Modifier.weight(1F).align(Alignment.CenterVertically), fontFamily = FontFamily(
+            text = name, modifier = Modifier
+                .weight(1F)
+                .align(Alignment.CenterVertically), fontFamily = FontFamily(
                 Font(
                     R.font.cafe24surround_air,
                 ),
@@ -97,7 +100,9 @@ fun MyFood(name: String) {
             painter = painterResource(id = R.drawable.delete),
             contentDescription = "delete food",
             tint = ThemeGrey,
-            modifier = Modifier.clickable(onClick = { openDialog.value = true }).size(20.dp)
+            modifier = Modifier
+                .clickable(onClick = { openDialog.value = true })
+                .size(20.dp)
         )
         if (openDialog.value) {
             Dialog(openDialog) { DeleteDialogContent(openDialog) }

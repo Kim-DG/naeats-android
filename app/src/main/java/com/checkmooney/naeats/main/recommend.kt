@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,7 +39,7 @@ fun TodayRecommend() {
 
 @Composable
 fun RecommendIcon() {
-    var selectRecommend by remember { mutableStateOf(0) }
+    var selectRecommend by rememberSaveable { mutableStateOf(0) }
     val icons = listOf(
         painterResource(id = R.drawable.alarm_grey),
         painterResource(id = R.drawable.favorite_border_grey),
@@ -76,7 +77,7 @@ fun UnderBar() {
 
 @Composable
 fun MenuCategory(selectRecommend: Int) {
-    var selectCategory by remember { mutableStateOf(0) }
+    var selectCategory by rememberSaveable { mutableStateOf(0) }
     Column {
         ScrollableTabRow(
             contentColor = ChoicePink,
@@ -134,7 +135,7 @@ fun RecommendWindow(selectRecommend: Int, selectCategory: Int) {
         }
         Spacer(
             modifier = Modifier
-                .height(12.dp)
+                .height(11.dp)
                 .background(color = Color.White)
         )
     }
