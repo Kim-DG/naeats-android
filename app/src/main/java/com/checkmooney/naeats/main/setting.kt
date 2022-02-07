@@ -2,20 +2,17 @@ package com.checkmooney.naeats.main
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -39,7 +36,7 @@ fun Setting() {
 
 @Composable
 fun SettingIcon() {
-    var selectSetting by rememberSaveable { mutableStateOf(0) }
+    var settingIconIndex by rememberSaveable { mutableStateOf(0) }
     val icons = listOf(
         painterResource(id = R.drawable.favorite_red),
         painterResource(id = R.drawable.heart_broken_black),
@@ -48,20 +45,20 @@ fun SettingIcon() {
     Column {
         TabRow(
             contentColor = ChoicePink,
-            selectedTabIndex = selectSetting,
+            selectedTabIndex = settingIconIndex,
             backgroundColor = Color.White
         ) {
             icons.forEachIndexed { index, icon ->
                 Tab(
                     icon = { Image(painter = icon, contentDescription = "setting icon") },
-                    selected = selectSetting == index,
-                    onClick = { selectSetting = index },
+                    selected = settingIconIndex == index,
+                    onClick = { settingIconIndex = index },
                     selectedContentColor = ChoicePink,
                 )
             }
         }
         UnderBar()
-        when (selectSetting) {
+        when (settingIconIndex) {
             0 -> MyFoodList(0)
             1 -> MyFoodList(1)
             2 -> MyInfo("kdg5746@gmail.com")

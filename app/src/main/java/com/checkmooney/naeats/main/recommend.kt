@@ -2,7 +2,6 @@ package com.checkmooney.naeats.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -39,7 +37,7 @@ fun TodayRecommend() {
 
 @Composable
 fun RecommendIcon() {
-    var selectRecommend by rememberSaveable { mutableStateOf(0) }
+    var recommendIconIndex by rememberSaveable { mutableStateOf(0) }
     val icons = listOf(
         painterResource(id = R.drawable.alarm_grey),
         painterResource(id = R.drawable.favorite_border_grey),
@@ -48,20 +46,20 @@ fun RecommendIcon() {
     Column {
         TabRow(
             contentColor = ChoicePink,
-            selectedTabIndex = selectRecommend,
+            selectedTabIndex = recommendIconIndex,
             backgroundColor = Color.White
         ) {
             icons.forEachIndexed { index, icon ->
                 Tab(
                     icon = { Image(painter = icon, contentDescription = "recommend icon") },
-                    selected = selectRecommend == index,
-                    onClick = { selectRecommend = index },
+                    selected = recommendIconIndex == index,
+                    onClick = { recommendIconIndex = index },
                     selectedContentColor = ChoicePink,
                 )
             }
         }
         UnderBar()
-        MenuCategory(selectRecommend)
+        MenuCategory(recommendIconIndex)
     }
 }
 
@@ -77,11 +75,11 @@ fun UnderBar() {
 
 @Composable
 fun MenuCategory(selectRecommend: Int) {
-    var selectCategory by rememberSaveable { mutableStateOf(0) }
+    var categoryIndex by rememberSaveable { mutableStateOf(0) }
     Column {
         ScrollableTabRow(
             contentColor = ChoicePink,
-            selectedTabIndex = selectCategory,
+            selectedTabIndex = categoryIndex,
             backgroundColor = ThemePink,
             edgePadding = 0.dp
         ) {
@@ -97,14 +95,14 @@ fun MenuCategory(selectRecommend: Int) {
                             ), color = Color.Black
                         )
                     },
-                    selected = selectCategory == index,
-                    onClick = { selectCategory = index },
+                    selected = categoryIndex == index,
+                    onClick = { categoryIndex = index },
                     selectedContentColor = ChoicePink,
                 )
             }
         }
         Spacer(modifier = Modifier.height(15.dp))
-        RecommendWindow(selectRecommend, selectCategory)
+        RecommendWindow(selectRecommend, categoryIndex)
     }
 }
 
@@ -143,8 +141,8 @@ fun RecommendWindow(selectRecommend: Int, selectCategory: Int) {
 
 @Composable
 fun RecommendFood() {
-    var selectFavor by remember { mutableStateOf(R.drawable.favorite_border_red) }
-    val isExpanded = remember { mutableStateOf(false) }
+    var favor by remember { mutableStateOf(R.drawable.favorite_border_red) }
+    val openDropDown = remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
@@ -189,18 +187,18 @@ fun RecommendFood() {
                     tint = ThemeGrey,
                     modifier = Modifier
                         .size(30.dp)
-                        .clickable(onClick = { isExpanded.value = true })
+                        .clickable(onClick = { openDropDown.value = true })
                 )
-                DropDown(isExpanded)
+                DropDown(openDropDown)
             }
             Icon(
-                painter = painterResource(id = selectFavor),
+                painter = painterResource(id = favor),
                 contentDescription = "favorite",
                 tint = HeartRed,
                 modifier = Modifier
                     .size(30.dp)
                     .clickable(onClick = {
-                        selectFavor = if (selectFavor == R.drawable.favorite_red) {
+                        favor = if (favor == R.drawable.favorite_red) {
                             R.drawable.favorite_border_red
                         } else {
                             R.drawable.favorite_red
@@ -212,16 +210,16 @@ fun RecommendFood() {
 }
 
 @Composable
-fun DropDown(isExpanded: MutableState<Boolean>) {
+fun DropDown(openDropDown: MutableState<Boolean>) {
     MaterialTheme(shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(16.dp))) {
         DropdownMenu(
-            expanded = isExpanded.value,
-            onDismissRequest = { isExpanded.value = false },
+            expanded = openDropDown.value,
+            onDismissRequest = { openDropDown.value = false },
             Modifier
                 .wrapContentSize()
         ) {
             DropdownMenuItem(
-                onClick = { isExpanded.value = false }, Modifier
+                onClick = { openDropDown.value = false }, Modifier
             ) {
                 Text(
                     "오늘 먹었어요",
@@ -236,7 +234,7 @@ fun DropDown(isExpanded: MutableState<Boolean>) {
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            DropdownMenuItem(onClick = { isExpanded.value = false }) {
+            DropdownMenuItem(onClick = { openDropDown.value = false }) {
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
