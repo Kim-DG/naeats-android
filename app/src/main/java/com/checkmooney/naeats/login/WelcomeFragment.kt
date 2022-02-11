@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.material.Text
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import com.checkmooney.naeats.R
 import com.checkmooney.naeats.ui.theme.NaEatsTheme
 
 class WelcomeFragment: Fragment() {
@@ -14,13 +15,12 @@ class WelcomeFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-
-
+    ): View {
         return ComposeView(requireContext()).apply {
             setContent {
                 NaEatsTheme {
-                    Text(text = "asdfasdf")
+                    WelcomeScreen()
+                    // findNavController().navigate(R.id.action_welcome_to_main)
                 }
             }
         }
