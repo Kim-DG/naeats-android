@@ -1,4 +1,4 @@
-package com.checkmooney.naeats.login
+package com.checkmooney.naeats.ui.login
 
 import android.os.Bundle
 import android.view.LayoutInflater

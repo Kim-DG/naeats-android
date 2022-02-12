@@ -1,4 +1,4 @@
-package com.checkmooney.naeats.components
+package com.checkmooney.naeats.ui.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween

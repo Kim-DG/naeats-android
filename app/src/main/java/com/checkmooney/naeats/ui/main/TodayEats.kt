@@ -1,4 +1,4 @@
-package com.checkmooney.naeats.main
+package com.checkmooney.naeats.ui.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,29 +14,34 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.checkmooney.naeats.components.simpleVerticalScrollbar
+import androidx.lifecycle.viewmodel.compose.*
+import com.checkmooney.naeats.ui.components.simpleVerticalScrollbar
 import com.checkmooney.naeats.models.Category
-import com.checkmooney.naeats.models.Menu
 import com.checkmooney.naeats.ui.theme.*
 
 @Composable
-fun TodayEats() {
+fun TodayEats(viewModel: MainViewModel = viewModel()) {
     var selectedTab by rememberSaveable { mutableStateOf(TodayEatsTab.ByKeyword) }
     NaEatsTheme() {
         Column {
             Tab(selectedTab) { selectedTab = it }
-            when (selectedTab) {
-                TodayEatsTab.ByKeyword -> SearchByKeyword()
-                TodayEatsTab.ByCategory -> SearchByCategory()
+            viewModel.menuList.observeAsState().value?.let { it ->
+                when (selectedTab) {
+                    TodayEatsTab.ByKeyword -> SearchByKeyword(it.map { food -> food.name })
+                    TodayEatsTab.ByCategory -> SearchByCategory(
+                        onCategoryChanged = { category ->
+                            viewModel.filterMenuByCategory(category)?.map { menu -> menu.name }
+                        })
+                }
             }
         }
     }
@@ -76,18 +81,19 @@ fun Tab(selectedTab: TodayEatsTab, onClick: (TodayEatsTab) -> Unit = {}) {
     }
 }
 
-@Preview
 @Composable
-fun SearchByKeyword() {
+fun SearchByKeyword(
+    menuList: List<String>,
+    onItemClicked: () -> Unit = {}
+) {
     var searchText by rememberSaveable { mutableStateOf("") }
     val searchList =
-        Menu.getMenuList().filter { food -> food.name.contains(searchText) }
-            .map { it.name }
+        menuList.filter { food -> food.contains(searchText) }
             .sorted()
     Column {
         SearchBar(searchText) { searchText = it }
         ListView(searchList) {
-            /* TODO: 클릭 시 띄울 팝업 추가 */
+            onItemClicked()
         }
     }
 }
@@ -174,7 +180,7 @@ fun ListView(list: List<String>, onItemClick: () -> Unit = {}) {
 }
 
 @Composable
-fun SearchByCategory() {
+fun SearchByCategory(onCategoryChanged: (Category) -> List<String>?) {
     val categories = Category.values().drop(1)
     val categoriesCount = categories.count()
     val rowCount = 4
@@ -228,7 +234,7 @@ fun SearchByCategory() {
                         )
                     }
                 }
-                ListView(list = Menu.getMenuList(selectedCategory).map { it.name }) {}
+                ListView(list = onCategoryChanged(selectedCategory) ?: listOf()) {}
             }
         }
     }

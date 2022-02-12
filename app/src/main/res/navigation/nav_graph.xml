@@ -2,19 +2,19 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/welcome_fragment">
+    app:startDestination="@id/main_fragment">
 
     <fragment
         android:id="@+id/login_fragment"
-        android:name="com.checkmooney.naeats.login.LoginFragment"
+        android:name="com.checkmooney.naeats.ui.login.LoginFragment"
         android:label="Login" />
     <fragment
         android:id="@+id/main_fragment"
-        android:name="com.checkmooney.naeats.main.MainFragment"
+        android:name="com.checkmooney.naeats.ui.main.MainFragment"
         android:label="Main" />
     <fragment
         android:id="@+id/welcome_fragment"
-        android:name="com.checkmooney.naeats.login.WelcomeFragment"
+        android:name="com.checkmooney.naeats.ui.login.WelcomeFragment"
         android:label="Welcome" >
         <action
             android:id="@+id/action_welcome_to_main"

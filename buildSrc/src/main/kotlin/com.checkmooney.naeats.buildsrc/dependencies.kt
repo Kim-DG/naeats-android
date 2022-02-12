@@ -85,7 +85,7 @@ object Libs {
 
     object Google {
         object Hilt {
-            const val version = "2.28-alpha"
+            const val version = "2.36"
 
             const val gradlePlugin = "com.google.dagger:hilt-android-gradle-plugin:$version"
             const val hiltAndroid = "com.google.dagger:hilt-android:$version"

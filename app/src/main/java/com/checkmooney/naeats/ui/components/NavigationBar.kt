@@ -1,35 +1,17 @@
-package com.checkmooney.naeats.components
+package com.checkmooney.naeats.ui.components
 
-import android.view.Gravity
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.Navigation.findNavController
 import com.checkmooney.naeats.R
-import com.checkmooney.naeats.Screen
-import com.checkmooney.naeats.navigate
-import com.checkmooney.naeats.main.MainFragment
 import com.checkmooney.naeats.ui.theme.*
 
 enum class NavigationItem(var route: String, var title: String, var description: String) {

@@ -1,4 +1,4 @@
-package com.checkmooney.naeats.main
+package com.checkmooney.naeats.ui.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

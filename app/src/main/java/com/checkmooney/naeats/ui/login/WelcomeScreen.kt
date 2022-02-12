@@ -1,4 +1,4 @@
-package com.checkmooney.naeats.login
+package com.checkmooney.naeats.ui.login
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image

@@ -1,7 +1,6 @@
-package com.checkmooney.naeats.components
+package com.checkmooney.naeats.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues

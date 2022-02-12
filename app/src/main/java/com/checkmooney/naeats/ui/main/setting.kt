@@ -1,4 +1,4 @@
-package com.checkmooney.naeats.main
+package com.checkmooney.naeats.ui.main
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
