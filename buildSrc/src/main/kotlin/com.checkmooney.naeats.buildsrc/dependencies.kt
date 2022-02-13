@@ -62,6 +62,7 @@ object Libs {
             const val tooling = "androidx.compose.ui:ui-tooling:$version"
             const val test = "androidx.compose.test:test-core:$version"
             const val uiTest = "androidx.compose.ui:ui-test:$version"
+            const val viewBinding = "androidx.compose.ui:ui-viewbinding:$version"
         }
 
         object Navigation {
@@ -91,5 +92,7 @@ object Libs {
             const val hiltAndroid = "com.google.dagger:hilt-android:$version"
             const val compiler = "com.google.dagger:hilt-android-compiler:$version"
         }
+
+        const val signIn = "com.google.android.gms:play-services-auth:20.1.0"
     }
 }

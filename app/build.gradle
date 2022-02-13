@@ -72,6 +72,7 @@ dependencies {
     implementation Libs.AndroidX.Compose.tooling
     implementation Libs.AndroidX.Compose.runtime
     implementation Libs.AndroidX.Compose.runtimeLivedata
+    implementation Libs.AndroidX.Compose.viewBinding
     implementation Libs.AndroidX.Navigation.compose
 
     implementation Libs.AndroidX.Retrofit2.retrofit
@@ -82,6 +83,8 @@ dependencies {
 
     implementation Libs.Google.Hilt.hiltAndroid
     kapt Libs.Google.Hilt.Compiler
+
+    implementation Libs.Google.signIn
 
     androidTestImplementation Libs.junit
     androidTestImplementation Libs.AndroidX.Test.core

@@ -1,15 +1,24 @@
 package com.checkmooney.naeats.di
 
+import android.app.Activity
+import android.content.Context
+import com.checkmooney.naeats.MainActivity
 import com.checkmooney.naeats.data.MenuDataSource
 import com.checkmooney.naeats.data.MenuFakeDataSource
 import com.checkmooney.naeats.data.MenuRepository
 import com.checkmooney.naeats.service.ApiService
+import com.checkmooney.naeats.service.GoogleService
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -43,6 +52,11 @@ object AppModule {
             .create(ApiService::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideUserService(@ApplicationContext context: Context): GoogleService {
+        return GoogleService(context)
+    }
 }
 
 @Module
