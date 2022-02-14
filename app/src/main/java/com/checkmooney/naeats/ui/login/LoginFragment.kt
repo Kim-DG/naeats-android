@@ -43,9 +43,7 @@ class LoginFragment : Fragment() {
                     navigate(Screen.Login, Screen.Main)
                 } else {
                     setContent {
-                        SignInScreen {
-                            viewModel.signInAsGoogle()
-                        }
+                        SignInScreen(onGoogleButtonClicked = viewModel::signInAsGoogle )
                     }
                 }
             })

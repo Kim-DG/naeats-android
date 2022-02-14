@@ -19,6 +19,7 @@ class LoginViewModel @Inject constructor(
 
     fun signInAsGoogle() {
         viewModelScope.launch {
+            println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^1\n")
             isLoggedIn.value = loginRepository.signInAsGoogle()
         }
     }
