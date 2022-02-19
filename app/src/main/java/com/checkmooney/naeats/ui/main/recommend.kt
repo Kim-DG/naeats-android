@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,48 +21,51 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.checkmooney.naeats.R
 import com.checkmooney.naeats.models.Category
+import com.checkmooney.naeats.models.Food
 import com.checkmooney.naeats.ui.theme.*
 
 
 @Preview(showBackground = true)
 @Composable
-fun TodayRecommend() {
-    Scaffold {
-        Column {
-            RecommendIcon()
-        }
-    }
-}
-
-@Composable
-fun RecommendIcon() {
-    var recommendIconIndex by rememberSaveable { mutableStateOf(0) }
+fun TodayRecommend(viewModel: MainViewModel = viewModel()) {
+    var selectedTab by rememberSaveable { mutableStateOf(RecommendTab.ByCoolTime) }
     val icons = listOf(
         painterResource(id = R.drawable.alarm_grey),
         painterResource(id = R.drawable.favorite_border_grey),
         painterResource(id = R.drawable.question_mark_grey)
     )
-    Column {
-        TabRow(
-            contentColor = ChoicePink,
-            selectedTabIndex = recommendIconIndex,
-            backgroundColor = Color.White
-        ) {
-            icons.forEachIndexed { index, icon ->
-                Tab(
-                    icon = { Image(painter = icon, contentDescription = "recommend icon") },
-                    selected = recommendIconIndex == index,
-                    onClick = { recommendIconIndex = index },
-                    selectedContentColor = ChoicePink,
-                )
+    NaEatsTheme() {
+        Column {
+            TabRow(
+                contentColor = ChoicePink,
+                selectedTabIndex = selectedTab.ordinal,
+                backgroundColor = Color.White
+            ) {
+                icons.forEachIndexed { index, icon ->
+                    Tab(
+                        icon = { Image(painter = icon, contentDescription = "recommend icon") },
+                        selected = selectedTab.ordinal == index,
+                        onClick = {
+                            selectedTab = RecommendTab.values()[index]
+                            viewModel.initCategoryIndex()
+                        },
+                        selectedContentColor = ChoicePink,
+                    )
+                }
             }
+            UnderBar()
+            MenuCategory(selectedTab)
         }
-        UnderBar()
-        MenuCategory(recommendIconIndex)
     }
 }
+
+enum class RecommendTab {
+    ByCoolTime, ByFavorite, ByRandom
+}
+
 
 @Composable
 fun UnderBar() {
@@ -74,40 +78,57 @@ fun UnderBar() {
 }
 
 @Composable
-fun MenuCategory(selectRecommend: Int) {
-    var categoryIndex by rememberSaveable { mutableStateOf(0) }
+fun MenuCategory(selectedTab: RecommendTab, viewModel: MainViewModel = viewModel()) {
     Column {
-        ScrollableTabRow(
-            contentColor = ChoicePink,
-            selectedTabIndex = categoryIndex,
-            backgroundColor = ThemePink,
-            edgePadding = 0.dp
-        ) {
-            val categoryList = Category.values().toList()
-            categoryList.forEachIndexed { index, text ->
-                Tab(
-                    text = {
-                        Text(
-                            text = text.title, fontFamily = FontFamily(
-                                Font(
-                                    R.font.cafe24surround_air,
-                                )
-                            ), color = Color.Black
-                        )
-                    },
-                    selected = categoryIndex == index,
-                    onClick = { categoryIndex = index },
-                    selectedContentColor = ChoicePink,
-                )
+        viewModel.categoryIndex.observeAsState().value?.let {
+            ScrollableTabRow(
+                contentColor = ChoicePink,
+                selectedTabIndex = it.ordinal,
+                backgroundColor = ThemePink,
+                edgePadding = 0.dp
+            ) {
+                val categoryList = Category.values().toList()
+                categoryList.forEachIndexed { index, text ->
+                    Tab(
+                        text = {
+                            Text(
+                                text = text.title, fontFamily = FontFamily(
+                                    Font(
+                                        R.font.cafe24surround_air,
+                                    )
+                                ), color = Color.Black
+                            )
+                        },
+                        selected = it.ordinal == index,
+                        onClick = { viewModel.updateCategoryIndex(Category.values()[index]) },
+                        selectedContentColor = ChoicePink,
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(15.dp))
-        RecommendWindow(selectRecommend, categoryIndex)
+
+        when (selectedTab) {
+            RecommendTab.ByCoolTime -> viewModel.recoCoolTimeList.observeAsState().value?.let { it ->
+                RecommendWindow(selectedTab, it)
+            }
+            RecommendTab.ByFavorite -> viewModel.recoCoolTimeList.observeAsState().value?.let { it ->
+                RecommendWindow(selectedTab, it)
+            }
+            RecommendTab.ByRandom -> viewModel.recoCoolTimeList.observeAsState().value?.let { it ->
+                RecommendWindow(selectedTab, it)
+            }
+        }
+
     }
 }
 
 @Composable
-fun RecommendWindow(selectRecommend: Int, selectCategory: Int) {
+fun RecommendWindow(
+    selectedTab: RecommendTab,
+    recommendList: List<Food>,
+    viewModel: MainViewModel = viewModel()
+) {
     Column {
         LazyColumn(
             modifier = pinkBgModifier.weight(1F),
@@ -118,13 +139,20 @@ fun RecommendWindow(selectRecommend: Int, selectCategory: Int) {
                     modifier = Modifier
                         .height(8.dp)
                 )
-                Text(text = selectRecommend.toString())
-                Text(text = selectCategory.toString())
-                RecommendFood()
-                RecommendFood()
-                RecommendFood()
-                RecommendFood()
-                RecommendFood()
+                //Text(text = selectedTab.toString())
+                //Text(text = viewModel.categoryIndex.value.toString())
+                when(viewModel.categoryIndex.value){
+                    Category.All -> recommendList.forEach {
+                        RecommendFood(it)
+                    }
+                    else -> {
+                        val filterList = recommendList.filter { it.category == viewModel.categoryIndex.value }
+                        filterList.forEach{
+                            RecommendFood(it)
+                        }
+                    }
+                }
+
                 Spacer(
                     modifier = Modifier
                         .height(8.dp)
@@ -140,7 +168,7 @@ fun RecommendWindow(selectRecommend: Int, selectCategory: Int) {
 }
 
 @Composable
-fun RecommendFood() {
+fun RecommendFood(food: Food) {
     var favor by remember { mutableStateOf(R.drawable.favorite_border_red) }
     val openDropDown = remember { mutableStateOf(false) }
     Row(
@@ -161,7 +189,7 @@ fun RecommendFood() {
                 .padding(start = 16.dp)
         ) {
             Text(
-                "햄버거", fontFamily = FontFamily(
+                food.name, fontFamily = FontFamily(
                     Font(
                         R.font.cafe24surround_air,
                     ),

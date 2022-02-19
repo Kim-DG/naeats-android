@@ -21,51 +21,50 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.checkmooney.naeats.R
 import com.checkmooney.naeats.ui.theme.*
 
 @Preview(showBackground = true)
 @Composable
-fun Setting() {
-    Scaffold {
+fun Setting(viewModel: MainViewModel = viewModel()) {
+    var selectedTab by rememberSaveable { mutableStateOf(SettingTab.ByFavorite) }
+    NaEatsTheme() {
+        val icons = listOf(
+            painterResource(id = R.drawable.favorite_red),
+            painterResource(id = R.drawable.heart_broken_black),
+            painterResource(id = R.drawable.person)
+        )
         Column {
-            SettingIcon()
+            TabRow(
+                contentColor = ChoicePink,
+                selectedTabIndex = selectedTab.ordinal,
+                backgroundColor = Color.White
+            ) {
+                icons.forEachIndexed { index, icon ->
+                    Tab(
+                        icon = { Image(painter = icon, contentDescription = "setting icon") },
+                        selected = selectedTab.ordinal == index,
+                        onClick = { selectedTab = SettingTab.values()[index] },
+                        selectedContentColor = ChoicePink,
+                    )
+                }
+            }
+            UnderBar()
+            when (selectedTab) {
+                SettingTab.ByFavorite -> MyFoodList(0)
+                SettingTab.ByHate -> MyFoodList(1)
+                SettingTab.ByMyInfo -> MyInfo("kdg5746@gmail.com")
+            }
+            //MenuCategory(selectRecommend)
         }
     }
 }
 
-@Composable
-fun SettingIcon() {
-    var settingIconIndex by rememberSaveable { mutableStateOf(0) }
-    val icons = listOf(
-        painterResource(id = R.drawable.favorite_red),
-        painterResource(id = R.drawable.heart_broken_black),
-        painterResource(id = R.drawable.person)
-    )
-    Column {
-        TabRow(
-            contentColor = ChoicePink,
-            selectedTabIndex = settingIconIndex,
-            backgroundColor = Color.White
-        ) {
-            icons.forEachIndexed { index, icon ->
-                Tab(
-                    icon = { Image(painter = icon, contentDescription = "setting icon") },
-                    selected = settingIconIndex == index,
-                    onClick = { settingIconIndex = index },
-                    selectedContentColor = ChoicePink,
-                )
-            }
-        }
-        UnderBar()
-        when (settingIconIndex) {
-            0 -> MyFoodList(0)
-            1 -> MyFoodList(1)
-            2 -> MyInfo("kdg5746@gmail.com")
-        }
-        //MenuCategory(selectRecommend)
-    }
+enum class SettingTab {
+    ByFavorite, ByHate, ByMyInfo
 }
+
 
 @Composable
 fun MyFoodList(favor: Int) {
