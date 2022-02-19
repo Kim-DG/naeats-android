@@ -12,6 +12,8 @@ class LoginRepository @Inject constructor(
     private val userRepository: UserRepository
 ) {
     suspend fun signInAsGoogle() : Boolean {
+        val idToken = googleService.getAuthToken()
+        //TODO: idToken 검증
         return true
     }
 }
