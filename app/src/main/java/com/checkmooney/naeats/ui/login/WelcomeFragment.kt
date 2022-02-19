@@ -33,14 +33,12 @@ class WelcomeFragment : Fragment() {
                     NaEatsTheme {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
                             AnimatedLogo { viewModel.setNextAction(WelcomeAction.TryLogin) }
-
                             if (it.action == WelcomeAction.TryLogin) {
                                 GoogleSignInButton(
                                     onGoogleButtonClicked = viewModel::signInAsGoogle
                                 )
                             }
                         }
-
                     }
                 }
             })

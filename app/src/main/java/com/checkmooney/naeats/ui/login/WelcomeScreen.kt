@@ -26,8 +26,8 @@ fun AnimatedLogo(onAnimationFinished: () -> Unit = {}) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
 
-    var upLogoState by remember { mutableStateOf(LogoPosition.Start) }
-    var downLogoState by remember { mutableStateOf(LogoPosition.Start) }
+    var upLogoState by rememberSaveable { mutableStateOf(LogoPosition.Start) }
+    var downLogoState by rememberSaveable { mutableStateOf(LogoPosition.Start) }
     val naOffsetAnnotation = animateDpAsState(
         if (upLogoState == LogoPosition.Start) (-150).dp else (screenHeight / 2) - 75.dp,
         spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow),
@@ -40,8 +40,12 @@ fun AnimatedLogo(onAnimationFinished: () -> Unit = {}) {
         downLogoState = LogoPosition.Center
         delay(1000)
         upLogoState = LogoPosition.Center
+        onAnimationFinished()
     }
-    Column(Modifier.fillMaxSize().background(color = ThemePink), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(color = ThemePink), horizontalAlignment = Alignment.CenterHorizontally) {
         Image(
             painter = painterResource(R.drawable.logo_na),
             contentDescription = "logo",
