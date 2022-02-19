@@ -46,7 +46,7 @@ object AppModule {
     fun provideRemoteService(okHttpClient: OkHttpClient): ApiService {
         return Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("http://http://13.209.72.236:4000/api")
+            .baseUrl("http://13.209.72.236:4000/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiService::class.java)
