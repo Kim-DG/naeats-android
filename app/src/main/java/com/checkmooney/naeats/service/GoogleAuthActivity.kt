@@ -1,8 +1,10 @@
 package com.checkmooney.naeats.service
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -11,10 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class GoogleAuthActivity : AppCompatActivity() {
-    companion object {
-        const val RC_SIGN_IN = 9001
-    }
+class GoogleAuthActivity : ComponentActivity() {
 
     @Inject
     lateinit var googleService: GoogleService
@@ -30,16 +29,14 @@ class GoogleAuthActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
-    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            googleService.googleAuthCallback?.onComplete(task)
-            finish()
+        val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == RESULT_OK) {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                googleService.googleAuthCallback?.onComplete(task)
+                finish()
+            }
         }
+        startForResult.launch(signInIntent)
     }
 }
