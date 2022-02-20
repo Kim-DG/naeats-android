@@ -5,10 +5,6 @@
     app:startDestination="@id/welcome_fragment">
 
     <fragment
-        android:id="@+id/login_fragment"
-        android:name="com.checkmooney.naeats.ui.login.LoginFragment"
-        android:label="Login" />
-    <fragment
         android:id="@+id/main_fragment"
         android:name="com.checkmooney.naeats.ui.main.MainFragment"
         android:label="Main" />

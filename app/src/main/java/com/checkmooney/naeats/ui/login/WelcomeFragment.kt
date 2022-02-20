@@ -15,6 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.checkmooney.naeats.Screen
+import com.checkmooney.naeats.navigate
 import com.checkmooney.naeats.ui.theme.NaEatsTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,12 +33,26 @@ class WelcomeFragment : Fragment() {
             viewModel.uiState.observe(viewLifecycleOwner, {
                 setContent {
                     NaEatsTheme {
-                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-                            AnimatedLogo { viewModel.setNextAction(WelcomeAction.TryLogin) }
-                            if (it.action == WelcomeAction.TryLogin) {
-                                GoogleSignInButton(
-                                    onGoogleButtonClicked = viewModel::signInAsGoogle
-                                )
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.BottomCenter
+                        ) {
+                            AnimatedLogo { viewModel.setNextAction(WelcomeAction.TryAutoLogin) }
+                            when (it.action) {
+                                is WelcomeAction.TryLogin -> {
+                                    GoogleSignInButton(
+                                        onGoogleButtonClicked = viewModel::signInAsGoogle
+                                    )
+                                }
+                                is WelcomeAction.VerifyToken, WelcomeAction.TryAutoLogin -> {
+                                    Text(
+                                        text = "로그인 정보를 확인 중이예요.",
+                                        modifier = Modifier.padding(bottom = 100.dp)
+                                    )
+                                }
+                                is WelcomeAction.Finished -> {
+                                    navigate(to = Screen.Main, from = Screen.Welcome)
+                                }
                             }
                         }
                     }

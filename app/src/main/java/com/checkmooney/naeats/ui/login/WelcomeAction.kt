@@ -5,4 +5,5 @@ sealed class WelcomeAction {
     object TryAutoLogin : WelcomeAction()
     object TryLogin : WelcomeAction()
     data class VerifyToken(val token: String) : WelcomeAction()
+    object Finished : WelcomeAction()
 }

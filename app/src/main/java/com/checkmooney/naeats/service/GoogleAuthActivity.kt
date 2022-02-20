@@ -24,19 +24,19 @@ class GoogleAuthActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("287689857214-5p41lm1nubeljuut5filgul99gs487n4.apps.googleusercontent.com")
             .requestEmail()
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         val signInIntent = googleSignInClient.signInIntent
 
-        val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == RESULT_OK) {
+        val startForResult =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
                 googleService.googleAuthCallback?.onComplete(task)
                 finish()
             }
-        }
         startForResult.launch(signInIntent)
     }
 }

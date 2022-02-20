@@ -1,9 +1,6 @@
 package com.checkmooney.naeats.ui.login
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.mapSaver
-import androidx.compose.runtime.setValue
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,8 +21,13 @@ class LoginViewModel @Inject constructor(
     val uiState: LiveData<WelcomeUiState>
         get() = _uiState
 
-    private fun tryAutoLogin() {
 
+    private fun tryAutoLogin() {
+        val refreshToken = userRepository.getRefreshToken()
+        setNextAction(
+            if (refreshToken.isNotEmpty()) WelcomeAction.VerifyToken(refreshToken)
+            else WelcomeAction.TryLogin
+        )
     }
 
     fun signInAsGoogle() {
@@ -35,7 +37,22 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    private fun verifyRefreshToken(value: String) {
+        viewModelScope.launch {
+            if (loginRepository.verifyAccessToken()) {
+                setNextAction(WelcomeAction.Finished)
+            } else {
+                setNextAction(WelcomeAction.TryLogin)
+            }
+        }
+    }
+
     fun setNextAction(action: WelcomeAction) {
         _uiState.value = uiState.value?.copy(action = action)
+        Log.d("LoginViewModel", "Next Action is $action")
+        when (action) {
+            is WelcomeAction.TryAutoLogin -> tryAutoLogin()
+            is WelcomeAction.VerifyToken -> verifyRefreshToken(action.token)
+        }
     }
 }
