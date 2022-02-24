@@ -36,16 +36,18 @@ fun AnimatedLogo(onAnimationFinished: () -> Unit = {}) {
         if (downLogoState == LogoPosition.Start) (-150).dp else (screenHeight / 2) - 65.dp,
         spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow),
     )
-    LaunchedEffect(true){
+    LaunchedEffect(true) {
         downLogoState = LogoPosition.Center
         delay(1000)
         upLogoState = LogoPosition.Center
+        delay(1000)
         onAnimationFinished()
     }
     Column(
         Modifier
             .fillMaxSize()
-            .background(color = ThemePink), horizontalAlignment = Alignment.CenterHorizontally) {
+            .background(color = ThemePink), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Image(
             painter = painterResource(R.drawable.logo_na),
             contentDescription = "logo",

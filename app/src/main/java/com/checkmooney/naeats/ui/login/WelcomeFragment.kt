@@ -19,6 +19,9 @@ import com.checkmooney.naeats.Screen
 import com.checkmooney.naeats.navigate
 import com.checkmooney.naeats.ui.theme.NaEatsTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class WelcomeFragment : Fragment() {
@@ -32,6 +35,7 @@ class WelcomeFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             viewModel.uiState.observe(viewLifecycleOwner, {
                 setContent {
+                    val coroutineScope = rememberCoroutineScope()
                     NaEatsTheme {
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -51,7 +55,14 @@ class WelcomeFragment : Fragment() {
                                     )
                                 }
                                 is WelcomeAction.Finished -> {
-                                    navigate(to = Screen.Main, from = Screen.Welcome)
+                                    Text(
+                                        text = "반갑습니다!",
+                                        modifier = Modifier.padding(bottom = 100.dp)
+                                    )
+                                    coroutineScope.launch {
+                                        delay(500) // NOTE: 너무 빨리 다음 프래그먼트로 전환되길래 delay 제공.
+                                        navigate(to = Screen.Main, from = Screen.Welcome)
+                                    }
                                 }
                             }
                         }

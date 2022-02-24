@@ -17,14 +17,13 @@ class LoginRepository @Inject constructor(
         val res = loginDataSource.getGoogleLoginData(GoogleAuthRequest(idToken = idToken))
         res?.let { userRepository.saveTokenData(it.accessToken, it.refreshToken) }
 
-        return res != null
+        return res?.isSuccess() == true
     }
 
     suspend fun verifyAccessToken(): Boolean {
-        // TODO: 헤더에 refresh token 값 넣는건가??
         val res = loginDataSource.refreshAccessToken()
         res?.let { if (it.errorCode == 0) userRepository.saveTokenData(accessToken = it.accessToken) }
 
-        return res?.statusCode == 200 //TODO: errorCode 확인 필요
+        return res?.isSuccess() == true
     }
 }

@@ -12,6 +12,6 @@ interface ApiService {
     fun login(@Body data: GoogleAuthRequest): Call<AuthTokenResponse>
 
     @GET("auth/refresh")
-    fun refreshAccessToken(): Call<AuthTokenResponse>
+    fun refreshAccessToken(): Call<RefreshAccessTokenResponse>
 
 }
