@@ -97,6 +97,7 @@ dependencies {
 
     implementation Libs.AndroidX.Okhttp3.okhttp
     implementation Libs.AndroidX.Okhttp3.logging
+    implementation Libs.AndroidX.Okhttp3.interceptor
 
     implementation Libs.Google.Hilt.hiltAndroid
     kapt Libs.Google.Hilt.Compiler

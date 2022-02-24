@@ -4,6 +4,7 @@ import android.content.Context
 import com.checkmooney.naeats.data.MenuDataSource
 import com.checkmooney.naeats.data.MenuFakeDataSource
 import com.checkmooney.naeats.data.MenuRepository
+import com.checkmooney.naeats.data.UserLocalDataSource
 import com.checkmooney.naeats.service.ApiService
 import com.checkmooney.naeats.service.GoogleService
 import com.checkmooney.naeats.service.SharedPrefService
@@ -14,6 +15,7 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.Interceptor.Companion.invoke
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -25,12 +27,19 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(userLocalDataSource: UserLocalDataSource): OkHttpClient {
         val interceptor =
             HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
         return OkHttpClient.Builder()
-            .addInterceptor(interceptor)
+            .addNetworkInterceptor(interceptor)
+            .addInterceptor(invoke { chain ->
+                chain.proceed(
+                    chain.request().newBuilder()
+                        .addHeader("Authorization", "Bearer ${userLocalDataSource.refreshToken}")
+                        .build()
+                )
+            })
             .build()
     }
 

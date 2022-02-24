@@ -2,9 +2,7 @@ package com.checkmooney.naeats.service
 
 import com.checkmooney.naeats.data.entities.*
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ApiService {
     @POST("TODO")

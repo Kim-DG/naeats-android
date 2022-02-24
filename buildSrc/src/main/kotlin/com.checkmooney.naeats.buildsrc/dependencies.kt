@@ -72,15 +72,16 @@ object Libs {
             const val compose = "androidx.navigation:navigation-compose:2.4.0-beta02"
         }
 
-        object Retrofit2{
+        object Retrofit2 {
             private const val version = "2.6.4"
             const val retrofit = "com.squareup.retrofit2:retrofit:$version"
             const val converter = "com.squareup.retrofit2:converter-gson:$version"
         }
 
-        object Okhttp3{
+        object Okhttp3 {
             const val okhttp = "com.squareup.okhttp3:okhttp:3.14.9"
             const val logging = "com.squareup.okhttp3:logging-interceptor:3.11.0"
+            const val interceptor = "com.squareup.okhttp3:logging-interceptor:4.9.3"
         }
     }
 
