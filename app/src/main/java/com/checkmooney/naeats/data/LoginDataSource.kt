@@ -16,8 +16,8 @@ class LoginDataSource @Inject constructor(private val service: ApiService) {
             .callback()?.setResponse(AuthTokenResponse())
     }
 
-    suspend fun refreshAccessToken(): RefreshAccessTokenResponse? {
-        return service.refreshAccessToken()
+    suspend fun refreshAccessToken(refreshToken: String): RefreshAccessTokenResponse? {
+        return service.refreshAccessToken("Bearer $refreshToken")
             .callback()?.setResponse(RefreshAccessTokenResponse())
     }
 }

@@ -34,11 +34,13 @@ object AppModule {
         return OkHttpClient.Builder()
             .addNetworkInterceptor(interceptor)
             .addInterceptor(invoke { chain ->
-                chain.proceed(
-                    chain.request().newBuilder()
-                        .addHeader("Authorization", "Bearer ${userLocalDataSource.refreshToken}")
-                        .build()
-                )
+                val builder = chain.request().newBuilder()
+                if (userLocalDataSource.accessToken.isNotEmpty()) {
+                    builder.addHeader(
+                        "Authorization", "Bearer ${userLocalDataSource.accessToken}"
+                    )
+                }
+                chain.proceed(builder.build())
             })
             .build()
     }

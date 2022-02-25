@@ -21,7 +21,7 @@ class LoginRepository @Inject constructor(
     }
 
     suspend fun verifyAccessToken(): Boolean {
-        val res = loginDataSource.refreshAccessToken()
+        val res = loginDataSource.refreshAccessToken(userRepository.getRefreshToken())
         res?.let { if (it.errorCode == 0) userRepository.saveTokenData(accessToken = it.accessToken) }
 
         return res?.isSuccess() == true
