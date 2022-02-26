@@ -49,7 +49,7 @@ class MainFragment : Fragment() {
                                         TodayEats()
                                     }
                                     Setting -> {
-                                        MyInfo()
+                                        Setting()
                                     }
                                 }
                             }

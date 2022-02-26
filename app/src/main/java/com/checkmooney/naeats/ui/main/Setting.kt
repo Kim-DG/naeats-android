@@ -25,12 +25,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.checkmooney.naeats.R
 import com.checkmooney.naeats.models.Food
-import com.checkmooney.naeats.ui.login.LoginViewModel
 import com.checkmooney.naeats.ui.theme.*
 
 @Preview(showBackground = true)
 @Composable
-fun Setting(viewModel: MainViewModel = viewModel(), loginViewModel: LoginViewModel = viewModel()) {
+fun Setting(viewModel: MainViewModel = viewModel()) {
     var selectedTab by rememberSaveable { mutableStateOf(SettingTab.ByFavorite) }
     NaEatsTheme() {
         val icons = listOf(
