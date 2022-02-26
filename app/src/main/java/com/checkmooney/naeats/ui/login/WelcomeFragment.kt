@@ -9,9 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -19,7 +17,6 @@ import com.checkmooney.naeats.Screen
 import com.checkmooney.naeats.navigate
 import com.checkmooney.naeats.ui.theme.NaEatsTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -33,7 +30,7 @@ class WelcomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireContext()).apply {
-            viewModel.uiState.observe(viewLifecycleOwner, {
+            viewModel.uiState.observe(viewLifecycleOwner, { action ->
                 setContent {
                     val coroutineScope = rememberCoroutineScope()
                     NaEatsTheme {
@@ -42,7 +39,7 @@ class WelcomeFragment : Fragment() {
                             contentAlignment = Alignment.BottomCenter
                         ) {
                             AnimatedLogo { viewModel.setNextAction(WelcomeAction.TryAutoLogin) }
-                            when (it.action) {
+                            when (action) {
                                 is WelcomeAction.TryLogin -> {
                                     GoogleSignInButton(
                                         onGoogleButtonClicked = viewModel::signInAsGoogle

@@ -1,29 +1,33 @@
 package com.checkmooney.naeats.data
 
-import androidx.lifecycle.MutableLiveData
 import com.checkmooney.naeats.data.entities.GoogleAuthRequest
-import com.checkmooney.naeats.service.GoogleService
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@ActivityRetainedScoped
+@Singleton
 class LoginRepository @Inject constructor(
-    private val googleService: GoogleService,
-    private val loginDataSource: LoginDataSource,
-    private val userRepository: UserRepository
+    private val loginRemoteDataSource: LoginRemoteDataSource,
+    private val loginLocalDataSource: LoginLocalDataSource
 ) {
     suspend fun signInAsGoogle(): Boolean {
-        val idToken = googleService.getAuthToken()
-        val res = loginDataSource.getGoogleLoginData(GoogleAuthRequest(idToken = idToken))
-        res?.let { userRepository.saveTokenData(it.accessToken, it.refreshToken) }
+        val idToken = loginRemoteDataSource.getGoogleIdToken()
+        val res = loginRemoteDataSource.getGoogleLoginData(GoogleAuthRequest(idToken = idToken))
+        res?.let {
+            loginLocalDataSource.accessToken = it.accessToken
+            loginLocalDataSource.updateRefreshToken(it.refreshToken)
+        }
 
         return res?.isSuccess() == true
     }
 
     suspend fun verifyAccessToken(): Boolean {
-        val res = loginDataSource.refreshAccessToken(userRepository.getRefreshToken())
-        res?.let { if (it.errorCode == 0) userRepository.saveTokenData(accessToken = it.accessToken) }
+        val res = loginRemoteDataSource.refreshAccessToken(loginLocalDataSource.refreshToken)
+        res?.let { if (it.isSuccess()) loginLocalDataSource.accessToken = it.accessToken }
 
         return res?.isSuccess() == true
     }
+
+    fun getRefreshToken() = loginLocalDataSource.refreshToken
 }

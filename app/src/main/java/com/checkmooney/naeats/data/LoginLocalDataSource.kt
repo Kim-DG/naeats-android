@@ -1,13 +1,14 @@
 package com.checkmooney.naeats.data
 
-import android.content.Context
 import com.checkmooney.naeats.service.SharedPrefService
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /*
-기기 내에 저장되어 있는 유저 정보를 가지고 오는 데이터 소스 클래스
+기기 내에 저장되어 있는 유저의 로그인 관련 정보를 가지고 오는 데이터 소스 클래스
  */
-class UserLocalDataSource @Inject constructor(private val sharedPrefService: SharedPrefService) {
+@Singleton
+class LoginLocalDataSource @Inject constructor(private val sharedPrefService: SharedPrefService) {
     var accessToken: String = ""
 
     private val refreshTokenKey = "refresh_token"
@@ -21,5 +22,10 @@ class UserLocalDataSource @Inject constructor(private val sharedPrefService: Sha
 
     fun updateRefreshToken(value: String) {
         refreshToken = value
+    }
+
+    fun deleteAllToken() {
+        refreshToken = ""
+        accessToken = ""
     }
 }

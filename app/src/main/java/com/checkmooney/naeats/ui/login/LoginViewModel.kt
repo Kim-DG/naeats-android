@@ -6,24 +6,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.checkmooney.naeats.data.LoginRepository
-import com.checkmooney.naeats.data.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginRepository: LoginRepository,
-    private val userRepository: UserRepository
+    private val loginRepository: LoginRepository
 ) : ViewModel() {
 
-    private var _uiState = MutableLiveData(WelcomeUiState())
-    val uiState: LiveData<WelcomeUiState>
+    private var _uiState = MutableLiveData<WelcomeAction>(WelcomeAction.ShowLogo)
+    val uiState: LiveData<WelcomeAction>
         get() = _uiState
 
 
     private fun tryAutoLogin() {
-        val refreshToken = userRepository.getRefreshToken()
+        val refreshToken = loginRepository.getRefreshToken()
         setNextAction(
             if (refreshToken.isNotEmpty()) WelcomeAction.VerifyToken(refreshToken)
             else WelcomeAction.TryLogin
@@ -33,7 +31,7 @@ class LoginViewModel @Inject constructor(
     fun signInAsGoogle() {
         viewModelScope.launch {
             val loginResult = loginRepository.signInAsGoogle()
-            _uiState.value = uiState.value?.copy(loggedIn = loginResult)
+            _uiState.value = if (loginResult) WelcomeAction.Finished else WelcomeAction.TryLogin
         }
     }
 
@@ -48,7 +46,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun setNextAction(action: WelcomeAction) {
-        _uiState.value = uiState.value?.copy(action = action)
+        _uiState.value = action
         Log.d("LoginViewModel", "Next Action is $action")
         when (action) {
             is WelcomeAction.TryAutoLogin -> tryAutoLogin()
