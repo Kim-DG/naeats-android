@@ -84,7 +84,7 @@ object NetworkModule {
                 val builder = chain.request().newBuilder()
                 if (loginLocalDataSource.accessToken.isNotEmpty()) {
                     builder.addHeader(
-                        "Authorization", "Bearer ${loginLocalDataSource.accessToken}"
+                        "Authorization", "Bearer ${loginLocalDataSource.accessToken}" //TODO: 로그아웃 하고 아예 다른 계정으로 로그인 할 때 갱신되는지 확인 필요.
                     )
                 }
                 chain.proceed(builder.build())

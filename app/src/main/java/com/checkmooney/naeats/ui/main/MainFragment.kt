@@ -11,6 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import com.checkmooney.naeats.Screen
+import com.checkmooney.naeats.navigate
 import com.checkmooney.naeats.ui.components.BottomNavigationBar
 import com.checkmooney.naeats.ui.components.NaEatsScaffold
 import com.checkmooney.naeats.ui.components.NavigationItem.*
@@ -55,9 +58,11 @@ class MainFragment : Fragment() {
                             }
                         }
                     }
-
                 }
             }
+            viewModel.navigateToMain.observe(viewLifecycleOwner, {
+                if (it) navigate(Screen.Welcome, Screen.Main)
+            })
         }
     }
 }

@@ -10,6 +10,7 @@ import com.checkmooney.naeats.ui.components.NavigationItem
 import com.checkmooney.naeats.data.UserRepository
 import com.checkmooney.naeats.models.Category
 import com.checkmooney.naeats.models.Food
+import com.checkmooney.naeats.models.UserInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,6 +21,19 @@ class MainViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
     var viewItem = MutableLiveData<NavigationItem>(NavigationItem.Recommend)
+
+    var navigateToMain = MutableLiveData(false)
+
+    private var _userInfo = MutableLiveData(UserInfo())
+    val userInfo : LiveData<UserInfo>
+        get() = _userInfo
+
+    init {
+        viewModelScope.launch {
+            val profile = userRepository.getUserProfile()
+            profile?.let { _userInfo.value = it }
+        }
+    }
 
     fun updateViewItem(item: NavigationItem) {
         viewItem.value = item
@@ -149,7 +163,7 @@ class MainViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
-            userRepository.logout()
+            navigateToMain.value = userRepository.logout()
         }
     }
 }

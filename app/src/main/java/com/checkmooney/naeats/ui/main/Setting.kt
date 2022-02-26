@@ -2,6 +2,7 @@ package com.checkmooney.naeats.ui.main
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +15,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -23,11 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.bumptech.glide.Glide
 import com.checkmooney.naeats.R
 import com.checkmooney.naeats.models.Food
+import com.checkmooney.naeats.models.UserInfo
 import com.checkmooney.naeats.ui.theme.*
+import com.skydoves.landscapist.glide.GlideImage
 
-@Preview(showBackground = true)
 @Composable
 fun Setting(viewModel: MainViewModel = viewModel()) {
     var selectedTab by rememberSaveable { mutableStateOf(SettingTab.ByFavorite) }
@@ -60,7 +64,15 @@ fun Setting(viewModel: MainViewModel = viewModel()) {
                 SettingTab.ByHate -> viewModel.infoHateList.observeAsState().value?.let { it ->
                     MyFoodList(it)
                 }
-                SettingTab.ByMyInfo -> MyInfo("kdg5746@gmail.com")
+                SettingTab.ByMyInfo -> {
+                    viewModel.userInfo.observeAsState().value?.let {
+                        MyInfo(
+                            userInfo = it,
+                            onLogoutSelected = {viewModel.logout()}
+                        )
+                    }
+
+                }
             }
             //MenuCategory(selectRecommend)
         }
@@ -82,7 +94,7 @@ fun MyFoodList(preferenceList: List<Food>) {
                 modifier = Modifier
                     .height(12.dp)
             )
-            preferenceList.forEach{
+            preferenceList.forEach {
                 MyFood(it)
             }
             Spacer(
@@ -124,30 +136,34 @@ fun MyFood(food: Food) {
 }
 
 @Composable
-fun MyInfo(email: String) {
-    Column(modifier = Modifier.padding(32.dp)) {
-        val openDialog = remember {
-            mutableStateOf(false)
-        }
-        Row(modifier = Modifier.padding(bottom = 16.dp)) {
-            Icon(
-                painter = painterResource(id = R.drawable.person),
-                contentDescription = "person",
-                tint = ThemeGrey
-            )
+fun MyInfo(
+    userInfo: UserInfo,
+    onLogoutSelected: () -> Unit = {}
+) {
+    Row(
+        modifier = Modifier
+            .padding(32.dp)
+            .fillMaxWidth()
+            .height(100.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        val openDialog = rememberSaveable { mutableStateOf(false) }
+        GlideImage(
+            imageModel = userInfo.profileImg,
+            modifier = Modifier.weight(0.3f),
+            contentScale = ContentScale.FillHeight
+        )
+        Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.End) {
             Text(
-                text = email, modifier = Modifier.weight(1F), fontFamily = FontFamily(
-                    Font(
-                        R.font.cafe24surround_air,
-                    ),
-                ), fontSize = 15.sp, color = TextGrey, textAlign = TextAlign.End
+                text = userInfo.username,
+                fontSize = 16.sp, color = TextGrey, textAlign = TextAlign.End
             )
-        }
-        Surface(
-            modifier = Modifier
-                .padding(top = 12.dp)
-                .align(Alignment.End)
-        ) {
+            Spacer(modifier = Modifier.padding(5.dp))
+            Text(
+                text = userInfo.email,
+                fontSize = 14.sp, color = TextGrey, textAlign = TextAlign.End
+            )
+            Spacer(modifier = Modifier.padding(10.dp))
             Button(
                 onClick = { openDialog.value = true },
                 colors = ButtonDefaults.buttonColors(
@@ -165,8 +181,9 @@ fun MyInfo(email: String) {
                 Text("LOGOUT")
             }
         }
+
         if (openDialog.value) {
-            settingDialogForm(openDialog) { LogOutDialogContent(openDialog) }
+            settingDialogForm(openDialog) { LogOutDialogContent(openDialog, onLogoutSelected) }
         }
     }
 }
@@ -205,7 +222,7 @@ fun DeleteDialogContent(openDialog: MutableState<Boolean>) {
 }
 
 @Composable
-fun LogOutDialogContent(openDialog: MutableState<Boolean>) {
+fun LogOutDialogContent(openDialog: MutableState<Boolean>, onLogoutSelected: () -> Unit) {
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(
             modifier = Modifier
@@ -227,7 +244,7 @@ fun LogOutDialogContent(openDialog: MutableState<Boolean>) {
             modifier = Modifier
                 .clickable(onClick = {
                     openDialog.value = false
-                    //삭제
+                    onLogoutSelected()
                 })
         )
         Spacer(

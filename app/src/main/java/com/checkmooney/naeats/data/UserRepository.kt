@@ -11,21 +11,21 @@ class UserRepository @Inject constructor(
     private val userRemoteDataSource: UserRemoteDataSource,
     private val loginLocalDataSource: LoginLocalDataSource
 ) {
-    var user: UserInfo = UserInfo()
-        private set
+    private var user: UserInfo? = null
 
-    init {
-        CoroutineScope(Dispatchers.IO).launch {
-            val profile = userRemoteDataSource.getUserProfile()
-            profile?.let {
-                user = UserInfo(
-                    id = it.id,
-                    email = it.email,
-                    username = it.username,
-                    profileImg = it.profileImg
-                )
-            }
+    suspend fun getUserProfile(): UserInfo? {
+        user?.let { return it }
+
+        val profile = userRemoteDataSource.getUserProfile()
+        profile?.let {
+            user = UserInfo(
+                id = it.id,
+                email = it.email,
+                username = it.username,
+                profileImg = it.profileImg
+            )
         }
+        return user
     }
 
     suspend fun logout(): Boolean {

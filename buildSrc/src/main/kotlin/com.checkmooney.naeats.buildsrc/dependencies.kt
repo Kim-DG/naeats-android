@@ -96,4 +96,8 @@ object Libs {
 
         const val signIn = "com.google.android.gms:play-services-auth:20.1.0"
     }
+
+    object Glide {
+        const val landscapist = "com.github.skydoves:landscapist-glide:1.4.7"
+    }
 }

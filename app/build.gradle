@@ -104,6 +104,8 @@ dependencies {
 
     implementation Libs.Google.signIn
 
+    implementation Libs.Glide.landscapist
+
     androidTestImplementation Libs.junit
     androidTestImplementation Libs.AndroidX.Test.core
     androidTestImplementation Libs.AndroidX.Test.espressoCore
