@@ -18,8 +18,6 @@ class GoogleAuthActivity : ComponentActivity() {
     @Inject
     lateinit var googleService: GoogleService
 
-    private lateinit var googleSignInClient: GoogleSignInClient
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -27,9 +25,9 @@ class GoogleAuthActivity : ComponentActivity() {
             .requestIdToken("287689857214-5p41lm1nubeljuut5filgul99gs487n4.apps.googleusercontent.com")
             .requestEmail()
             .build()
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
+        googleService.googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        val signInIntent = googleSignInClient.signInIntent
+        val signInIntent = googleService.googleSignInClient?.signInIntent
 
         val startForResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->

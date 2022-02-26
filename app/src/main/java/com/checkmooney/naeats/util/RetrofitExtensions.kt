@@ -1,21 +1,33 @@
 package com.checkmooney.naeats.util
 
-import com.checkmooney.naeats.data.entities.AuthTokenResponse
+import android.util.Log
 import com.checkmooney.naeats.data.entities.BaseResponse
-import com.checkmooney.naeats.data.entities.RefreshAccessTokenResponse
-import okhttp3.ResponseBody
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
+import retrofit2.*
 
-suspend inline fun <Res : BaseResponse> Call<Res>.callback() = suspendCoroutine<Response<Res>?> {
+
+suspend inline fun <Res: BaseResponse> Call<Res>.getResponse() = suspendCoroutine<Res?> {
     enqueue(object : Callback<Res> {
         override fun onResponse(call: Call<Res>, response: Response<Res>) {
-            it.resume(response)
+            val res = if (response.isSuccessful) {
+                 response.body()?.apply {
+                    statusCode = response.code()
+                    message = response.message()
+                }
+            } else {
+                val jsonObject = JSONObject(response.errorBody()!!.string())
+                response.body()?.apply {
+                    message = jsonObject.optString("message")
+                    statusCode = jsonObject.optInt("statusCode")
+                    errorCode = jsonObject.optInt("errorCode")
+                }
+            }
+
+            Log.d("ApiService", res.toString())
+            it.resume(res)
         }
 
         override fun onFailure(call: Call<Res>, t: Throwable) {
@@ -24,16 +36,19 @@ suspend inline fun <Res : BaseResponse> Call<Res>.callback() = suspendCoroutine<
     })
 }
 
-fun <Res : BaseResponse> Response<Res>.setResponse(res: Res): Res? {
-    return if (isSuccessful) body()?.apply {
-        statusCode = code()
-        message = message()
-    } else {
-        val jsonObject = JSONObject(errorBody()!!.string())
-        res.apply {
-            message = jsonObject.optString("message")
-            statusCode = jsonObject.optInt("statusCode")
-            errorCode = jsonObject.optInt("errorCode")
+suspend fun <Res : BaseResponse> Call<Unit>.getResponse(baseResponse: Res) = suspendCoroutine<Res> {
+    enqueue(object : Callback<Unit> {
+        override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+            val res = baseResponse.apply {
+                statusCode = response.code()
+                message = response.message()
+            }
+            Log.d("ApiService", res.toString())
+            it.resume(res)
         }
-    }
+
+        override fun onFailure(call: Call<Unit>, t: Throwable) {
+            it.resumeWithException(t)
+        }
+    })
 }

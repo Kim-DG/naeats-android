@@ -1,14 +1,10 @@
 package com.checkmooney.naeats.ui.main
 
-import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.checkmooney.naeats.data.LoginRepository
 import com.checkmooney.naeats.data.MenuRepository
 import com.checkmooney.naeats.ui.components.NavigationItem
 import com.checkmooney.naeats.data.UserRepository
@@ -148,6 +144,12 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val list = menuRepository.getAllMenu()
             _infoHateList.value = list
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            userRepository.logout()
         }
     }
 }

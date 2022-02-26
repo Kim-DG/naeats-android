@@ -1,25 +1,40 @@
 package com.checkmooney.naeats.data
 
-import com.checkmooney.naeats.models.User
+import com.checkmooney.naeats.models.UserInfo
+import kotlinx.coroutines.*
 import javax.inject.Inject
-import javax.inject.Singleton
 
-/*
+/**
 유저 정보를 처리하는 저장소.
  */
-@Singleton
 class UserRepository @Inject constructor(
     private val userRemoteDataSource: UserRemoteDataSource,
-    private val userLocalDataSource: UserLocalDataSource
+    private val loginLocalDataSource: LoginLocalDataSource
 ) {
-    private var _user = User.NoUserLoggedIn
-    val user: User
-        get() = _user
+    var user: UserInfo = UserInfo()
+        private set
 
-    fun getRefreshToken() = userLocalDataSource.refreshToken
+    init {
+        CoroutineScope(Dispatchers.IO).launch {
+            val profile = userRemoteDataSource.getUserProfile()
+            profile?.let {
+                user = UserInfo(
+                    id = it.id,
+                    email = it.email,
+                    username = it.username,
+                    profileImg = it.profileImg
+                )
+            }
+        }
+    }
 
-    fun saveTokenData(accessToken: String? = null, refreshToken: String? = null) {
-        accessToken?.let { userLocalDataSource.accessToken = it }
-        refreshToken?.let { userLocalDataSource.updateRefreshToken(it) }
+    suspend fun logout(): Boolean {
+        val res = userRemoteDataSource.logout()
+        if (res.isSuccess()) {
+            userRemoteDataSource.signOutFromGoogle()
+            loginLocalDataSource.deleteAllToken()
+        }
+
+        return res.isSuccess()
     }
 }

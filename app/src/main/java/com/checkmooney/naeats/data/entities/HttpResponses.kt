@@ -8,6 +8,8 @@ abstract class BaseResponse(
     fun isSuccess() = statusCode in 200..299
 }
 
+open class EmptyResponse : BaseResponse()
+
 data class GetProfileResponse(
     val id: String = "",
     val email: String = "",
@@ -23,3 +25,5 @@ data class AuthTokenResponse(
 data class RefreshAccessTokenResponse(
     val accessToken: String = "",
 ) : BaseResponse()
+
+class LogoutResponse : EmptyResponse()

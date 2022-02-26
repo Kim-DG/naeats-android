@@ -31,7 +31,6 @@ class MainFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 NaEatsTheme {
-
                     viewModel.viewItem.observeAsState().value?.let { currentViewItem ->
                         NaEatsScaffold(
                             topBar = { TopBar(title = currentViewItem.description) },
@@ -44,14 +43,13 @@ class MainFragment : Fragment() {
                             Box(modifier = Modifier.padding(it)) {
                                 when (currentViewItem) {
                                     Recommend -> {
-                                        viewModel.updateViewItem(Recommend)
                                         TodayRecommend()
                                     }
                                     TodayEats -> {
-                                            TodayEats()
+                                        TodayEats()
                                     }
                                     Setting -> {
-                                        Setting()
+                                        MyInfo()
                                     }
                                 }
                             }

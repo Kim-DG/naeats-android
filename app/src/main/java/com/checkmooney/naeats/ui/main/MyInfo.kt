@@ -25,9 +25,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.checkmooney.naeats.R
 import com.checkmooney.naeats.ui.theme.*
 
-@Preview(showBackground = true)
 @Composable
-fun Setting(viewModel: MainViewModel = viewModel()) {
+fun MyInfo(viewModel: MainViewModel = viewModel()) {
     var selectedTab by rememberSaveable { mutableStateOf(SettingTab.ByFavorite) }
     NaEatsTheme() {
         val icons = listOf(
@@ -50,11 +49,10 @@ fun Setting(viewModel: MainViewModel = viewModel()) {
                     )
                 }
             }
-            UnderBar()
             when (selectedTab) {
                 SettingTab.ByFavorite -> MyFoodList(0)
                 SettingTab.ByHate -> MyFoodList(1)
-                SettingTab.ByMyInfo -> MyInfo("kdg5746@gmail.com")
+                SettingTab.ByMyInfo -> Profile("kdg5746@gmail.com")
             }
             //MenuCategory(selectRecommend)
         }
@@ -107,8 +105,9 @@ fun MyFood(name: String) {
 
 }
 
+@Preview
 @Composable
-fun MyInfo(email: String) {
+fun Profile(email: String = "") {
     Column(modifier = Modifier.padding(32.dp)) {
         val openDialog = remember {
             mutableStateOf(false)
