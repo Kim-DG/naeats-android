@@ -19,11 +19,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.*
+import com.checkmooney.naeats.R
 import com.checkmooney.naeats.ui.components.simpleVerticalScrollbar
 import com.checkmooney.naeats.models.Category
 import com.checkmooney.naeats.ui.theme.*
@@ -150,7 +153,7 @@ fun SearchBar(searchText: String = "", valueChanged: ((String) -> Unit) = {}) {
 fun ListItem(
     modifier: Modifier = Modifier,
     text: String = "dfdf",
-    fontSize: TextUnit = 15.sp,
+    fontSize: TextUnit = 18.sp,
     textAlign: TextAlign? = null,
 ) {
     Text(
@@ -174,7 +177,7 @@ fun ListView(list: List<String>, onItemClick: () -> Unit = {}) {
                 .clickable { onItemClick() }
                 .background(MaterialTheme.colors.background)
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 12.dp))
+                .padding(horizontal = 24.dp, vertical = 24.dp))
         }
     }
 }
@@ -239,3 +242,5 @@ fun SearchByCategory(onCategoryChanged: (Category) -> List<String>?) {
         }
     }
 }
+
+

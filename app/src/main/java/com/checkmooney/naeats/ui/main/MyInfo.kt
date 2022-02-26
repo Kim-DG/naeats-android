@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,10 +24,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.checkmooney.naeats.R
+import com.checkmooney.naeats.models.Food
+import com.checkmooney.naeats.ui.login.LoginViewModel
 import com.checkmooney.naeats.ui.theme.*
 
+@Preview(showBackground = true)
 @Composable
-fun MyInfo(viewModel: MainViewModel = viewModel()) {
+fun Setting(viewModel: MainViewModel = viewModel(), loginViewModel: LoginViewModel = viewModel()) {
     var selectedTab by rememberSaveable { mutableStateOf(SettingTab.ByFavorite) }
     NaEatsTheme() {
         val icons = listOf(
@@ -49,10 +53,15 @@ fun MyInfo(viewModel: MainViewModel = viewModel()) {
                     )
                 }
             }
+            UnderBar()
             when (selectedTab) {
-                SettingTab.ByFavorite -> MyFoodList(0)
-                SettingTab.ByHate -> MyFoodList(1)
-                SettingTab.ByMyInfo -> Profile("kdg5746@gmail.com")
+                SettingTab.ByFavorite -> viewModel.infoFavoriteList.observeAsState().value?.let { it ->
+                    MyFoodList(it)
+                }
+                SettingTab.ByHate -> viewModel.infoHateList.observeAsState().value?.let { it ->
+                    MyFoodList(it)
+                }
+                SettingTab.ByMyInfo -> MyInfo("kdg5746@gmail.com")
             }
             //MenuCategory(selectRecommend)
         }
@@ -65,30 +74,40 @@ enum class SettingTab {
 
 
 @Composable
-fun MyFoodList(favor: Int) {
+fun MyFoodList(preferenceList: List<Food>) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         item {
-            MyFood("양꼬치")
+            Spacer(
+                modifier = Modifier
+                    .height(12.dp)
+            )
+            preferenceList.forEach{
+                MyFood(it)
+            }
+            Spacer(
+                modifier = Modifier
+                    .height(12.dp)
+            )
         }
     }
 }
 
 @Composable
-fun MyFood(name: String) {
-    Row(modifier = Modifier.padding(32.dp)) {
+fun MyFood(food: Food) {
+    Row(modifier = Modifier.padding(24.dp)) {
         val openDialog = remember {
             mutableStateOf(false)
         }
         Text(
-            text = name, modifier = Modifier
+            text = food.name, modifier = Modifier
                 .weight(1F)
                 .align(Alignment.CenterVertically), fontFamily = FontFamily(
                 Font(
                     R.font.cafe24surround_air,
                 ),
-            ), fontSize = 15.sp, color = TextGrey
+            ), fontSize = 18.sp, color = TextGrey
         )
         Icon(
             painter = painterResource(id = R.drawable.delete),
@@ -99,15 +118,14 @@ fun MyFood(name: String) {
                 .size(20.dp)
         )
         if (openDialog.value) {
-            Dialog(openDialog) { DeleteDialogContent(openDialog) }
+            settingDialogForm(openDialog) { DeleteDialogContent(openDialog) }
         }
     }
 
 }
 
-@Preview
 @Composable
-fun Profile(email: String = "") {
+fun MyInfo(email: String) {
     Column(modifier = Modifier.padding(32.dp)) {
         val openDialog = remember {
             mutableStateOf(false)
@@ -149,7 +167,7 @@ fun Profile(email: String = "") {
             }
         }
         if (openDialog.value) {
-            Dialog(openDialog) { LogOutDialogContent(openDialog) }
+            settingDialogForm(openDialog) { LogOutDialogContent(openDialog) }
         }
     }
 }
@@ -221,7 +239,7 @@ fun LogOutDialogContent(openDialog: MutableState<Boolean>) {
 }
 
 @Composable
-fun Dialog(openDialog: MutableState<Boolean>, content: @Composable () -> Unit) {
+fun settingDialogForm(openDialog: MutableState<Boolean>, content: @Composable () -> Unit) {
     Dialog(onDismissRequest = { openDialog.value = false }) {
         Surface(
             modifier = Modifier

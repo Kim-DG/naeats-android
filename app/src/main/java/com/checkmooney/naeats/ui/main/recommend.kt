@@ -110,13 +110,13 @@ fun MenuCategory(selectedTab: RecommendTab, viewModel: MainViewModel = viewModel
 
         when (selectedTab) {
             RecommendTab.ByCoolTime -> viewModel.recoCoolTimeList.observeAsState().value?.let { it ->
-                RecommendWindow(selectedTab, it)
+                RecommendWindow(it)
             }
-            RecommendTab.ByFavorite -> viewModel.recoCoolTimeList.observeAsState().value?.let { it ->
-                RecommendWindow(selectedTab, it)
+            RecommendTab.ByFavorite -> viewModel.recoFavoriteList.observeAsState().value?.let { it ->
+                RecommendWindow(it)
             }
-            RecommendTab.ByRandom -> viewModel.recoCoolTimeList.observeAsState().value?.let { it ->
-                RecommendWindow(selectedTab, it)
+            RecommendTab.ByRandom -> viewModel.recoRandomList.observeAsState().value?.let { it ->
+                RecommendWindow(it)
             }
         }
 
@@ -125,7 +125,6 @@ fun MenuCategory(selectedTab: RecommendTab, viewModel: MainViewModel = viewModel
 
 @Composable
 fun RecommendWindow(
-    selectedTab: RecommendTab,
     recommendList: List<Food>,
     viewModel: MainViewModel = viewModel()
 ) {
