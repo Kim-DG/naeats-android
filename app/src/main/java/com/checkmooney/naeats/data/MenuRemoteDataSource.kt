@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class MenuRemoteDataSource @Inject constructor(private val apiService: MainApiService): MenuDataSource {
     override suspend fun getAllMenu(): List<Food> {
-        TODO("Not yet implemented")
+        return listOf()
     }
 
 }

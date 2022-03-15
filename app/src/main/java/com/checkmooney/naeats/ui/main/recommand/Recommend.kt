@@ -1,4 +1,4 @@
-package com.checkmooney.naeats.ui.main
+package com.checkmooney.naeats.ui.main.recommand
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.checkmooney.naeats.R
 import com.checkmooney.naeats.models.Category
 import com.checkmooney.naeats.models.Food
+import com.checkmooney.naeats.ui.main.MainViewModel
 import com.checkmooney.naeats.ui.theme.*
 
 

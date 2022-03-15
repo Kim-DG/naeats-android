@@ -1,4 +1,4 @@
-package com.checkmooney.naeats.ui.main
+package com.checkmooney.naeats.ui.main.today
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.*
 import com.checkmooney.naeats.R
 import com.checkmooney.naeats.ui.components.simpleVerticalScrollbar
 import com.checkmooney.naeats.models.Category
+import com.checkmooney.naeats.ui.main.MainViewModel
 import com.checkmooney.naeats.ui.theme.*
 
 @Composable

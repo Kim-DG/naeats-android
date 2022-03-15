@@ -10,6 +10,7 @@ import com.checkmooney.naeats.data.UserRepository
 import com.checkmooney.naeats.data.entities.UserProfile
 import com.checkmooney.naeats.models.Category
 import com.checkmooney.naeats.models.Food
+import com.checkmooney.naeats.ui.main.recommand.RecommendTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,14 +18,14 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val menuRepository: MenuRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : ViewModel() {
     var viewItem = MutableLiveData<NavigationItem>(NavigationItem.Recommend)
 
     var navigateToMain = MutableLiveData(false)
 
     private var _userProfile = MutableLiveData(UserProfile())
-    val userInfo : LiveData<UserProfile>
+    val userInfo: LiveData<UserProfile>
         get() = _userProfile
 
     init {
@@ -44,8 +45,10 @@ class MainViewModel @Inject constructor(
                 getAllRecoRandomList()
             }
             NavigationItem.Setting -> {
-                getAllInfoFavoriteList()
-                getAllInfoHateList()
+                viewModelScope.launch {
+                    getAllInfoFavoriteList()
+                    getAllInfoHateList()
+                }
             }
         }
     }
@@ -146,18 +149,15 @@ class MainViewModel @Inject constructor(
         }
 
     // Setting
-    private fun getAllInfoFavoriteList() {
-        viewModelScope.launch {
-            val list = menuRepository.getAllMenu()
-            _infoFavoriteList.value = list
-        }
+    private suspend fun getAllInfoFavoriteList() {
+        val list = menuRepository.getAllMenu()
+        _infoFavoriteList.value = list
     }
 
-    private fun getAllInfoHateList() {
-        viewModelScope.launch {
-            val list = menuRepository.getAllMenu()
-            _infoHateList.value = list
-        }
+
+    private suspend fun getAllInfoHateList() {
+        val list = menuRepository.getAllMenu()
+        _infoHateList.value = list
     }
 
     fun logout() {

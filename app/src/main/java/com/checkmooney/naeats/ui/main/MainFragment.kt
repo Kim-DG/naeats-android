@@ -11,13 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.checkmooney.naeats.Screen
 import com.checkmooney.naeats.navigate
 import com.checkmooney.naeats.ui.components.BottomNavigationBar
 import com.checkmooney.naeats.ui.components.NaEatsScaffold
 import com.checkmooney.naeats.ui.components.NavigationItem.*
 import com.checkmooney.naeats.ui.components.TopBar
+import com.checkmooney.naeats.ui.main.recommand.TodayRecommend
+import com.checkmooney.naeats.ui.main.setting.Setting
+import com.checkmooney.naeats.ui.main.today.TodayEats
 import com.checkmooney.naeats.ui.theme.NaEatsTheme
 import dagger.hilt.android.AndroidEntryPoint
 

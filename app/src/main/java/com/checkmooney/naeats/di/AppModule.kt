@@ -1,10 +1,7 @@
 package com.checkmooney.naeats.di
 
 import android.content.Context
-import com.checkmooney.naeats.data.MenuDataSource
-import com.checkmooney.naeats.data.MenuFakeDataSource
-import com.checkmooney.naeats.data.MenuRepository
-import com.checkmooney.naeats.data.LoginLocalDataSource
+import com.checkmooney.naeats.data.*
 import com.checkmooney.naeats.service.LoginApiService
 import com.checkmooney.naeats.service.GoogleService
 import com.checkmooney.naeats.service.MainApiService
@@ -84,7 +81,8 @@ object NetworkModule {
                 val builder = chain.request().newBuilder()
                 if (loginLocalDataSource.accessToken.isNotEmpty()) {
                     builder.addHeader(
-                        "Authorization", "Bearer ${loginLocalDataSource.accessToken}" //TODO: 로그아웃 하고 아예 다른 계정으로 로그인 할 때 갱신되는지 확인 필요.
+                        "Authorization",
+                        "Bearer ${loginLocalDataSource.accessToken}" //TODO: 로그아웃 하고 아예 다른 계정으로 로그인 할 때 갱신되는지 확인 필요.
                     )
                 }
                 chain.proceed(builder.build())
@@ -95,8 +93,6 @@ object NetworkModule {
 }
 
 
-
-
 @Module
 @InstallIn(SingletonComponent::class)
 object MainModule {
@@ -104,7 +100,7 @@ object MainModule {
     @Provides
     fun provideLoginApiService(
         @BaseUrl baseUrl: String,
-        @LoginInterceptorOkHttpClient okHttpClient: OkHttpClient
+        @LoginInterceptorOkHttpClient okHttpClient: OkHttpClient,
     ): LoginApiService {
         return Retrofit.Builder()
             .client(okHttpClient)
@@ -117,7 +113,7 @@ object MainModule {
     @Provides
     fun provideMainApiService(
         @BaseUrl baseUrl: String,
-        @MainInterceptorOkHttpClient okHttpClient: OkHttpClient
+        @MainInterceptorOkHttpClient okHttpClient: OkHttpClient,
     ): MainApiService {
         return Retrofit.Builder()
             .client(okHttpClient)
@@ -141,9 +137,14 @@ object MainModule {
     fun provideFakeMenuDataSource(): MenuDataSource = MenuFakeDataSource
 
     @Provides
+    @RemoteMenuDataSource
+    fun provideRemoteMenuDataSource(apiService: MainApiService): MenuDataSource =
+        MenuRemoteDataSource(apiService)
+
+    @Provides
     fun provideMenuRepository(
-        @FakeMenuDataSource fakeMenuDataSource: MenuDataSource
+        @RemoteMenuDataSource menuDataSource: MenuDataSource,
     ): MenuRepository {
-        return MenuRepository(fakeMenuDataSource)
+        return MenuRepository(menuDataSource)
     }
 }
