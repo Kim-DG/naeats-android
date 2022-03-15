@@ -27,8 +27,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bumptech.glide.Glide
 import com.checkmooney.naeats.R
+import com.checkmooney.naeats.data.entities.UserProfile
 import com.checkmooney.naeats.models.Food
-import com.checkmooney.naeats.models.UserInfo
 import com.checkmooney.naeats.ui.theme.*
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -137,7 +137,7 @@ fun MyFood(food: Food) {
 
 @Composable
 fun MyInfo(
-    userInfo: UserInfo,
+    userInfo: UserProfile,
     onLogoutSelected: () -> Unit = {}
 ) {
     Row(

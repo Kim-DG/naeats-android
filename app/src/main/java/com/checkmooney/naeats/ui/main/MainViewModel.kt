@@ -4,13 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.checkmooney.naeats.data.LoginRepository
 import com.checkmooney.naeats.data.MenuRepository
 import com.checkmooney.naeats.ui.components.NavigationItem
 import com.checkmooney.naeats.data.UserRepository
+import com.checkmooney.naeats.data.entities.UserProfile
 import com.checkmooney.naeats.models.Category
 import com.checkmooney.naeats.models.Food
-import com.checkmooney.naeats.models.UserInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,14 +23,14 @@ class MainViewModel @Inject constructor(
 
     var navigateToMain = MutableLiveData(false)
 
-    private var _userInfo = MutableLiveData(UserInfo())
-    val userInfo : LiveData<UserInfo>
-        get() = _userInfo
+    private var _userProfile = MutableLiveData(UserProfile())
+    val userInfo : LiveData<UserProfile>
+        get() = _userProfile
 
     init {
         viewModelScope.launch {
             val profile = userRepository.getUserProfile()
-            profile?.let { _userInfo.value = it }
+            profile?.let { _userProfile.value = it }
         }
     }
 

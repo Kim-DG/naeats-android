@@ -1,7 +1,6 @@
 package com.checkmooney.naeats.data
 
-import com.checkmooney.naeats.models.UserInfo
-import kotlinx.coroutines.*
+import com.checkmooney.naeats.data.entities.UserProfile
 import javax.inject.Inject
 
 /**
@@ -11,19 +10,14 @@ class UserRepository @Inject constructor(
     private val userRemoteDataSource: UserRemoteDataSource,
     private val loginLocalDataSource: LoginLocalDataSource
 ) {
-    private var user: UserInfo? = null
+    private var user: UserProfile? = null
 
-    suspend fun getUserProfile(): UserInfo? {
+    suspend fun getUserProfile(): UserProfile? {
         user?.let { return it }
 
         val profile = userRemoteDataSource.getUserProfile()
         profile?.let {
-            user = UserInfo(
-                id = it.id,
-                email = it.email,
-                username = it.username,
-                profileImg = it.profileImg
-            )
+            user = it.profile
         }
         return user
     }

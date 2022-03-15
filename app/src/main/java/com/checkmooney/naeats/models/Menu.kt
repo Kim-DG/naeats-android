@@ -17,12 +17,3 @@ enum class Category(val title: String, val id: Int) {
 data class Food(val category: Category, val name: String, val id: Int) {
 
 }
-
-data class FoodInfo(
-    val id: String,
-    val name: String,
-    val thumbnail: String,
-    val categories: MutableList<String>
-    val likeCount: Int,
-    val isLike: Int
-)

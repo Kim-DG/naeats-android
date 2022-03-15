@@ -1,7 +1,6 @@
 package com.checkmooney.naeats.data.entities
 
 import com.checkmooney.naeats.models.Food
-import com.checkmooney.naeats.models.FoodInfo
 
 abstract class BaseResponse(
     open var statusCode: Int = 0,
@@ -11,18 +10,13 @@ abstract class BaseResponse(
     fun isSuccess() = statusCode in 200..299
 }
 
-open class EmptyResponse : BaseResponse()
-
 data class GetProfileResponse(
-    val id: String = "",
-    val email: String = "",
-    val username: String = "",
-    val profileImg: String = ""
+    val profile: UserProfile,
 ) : BaseResponse()
 
 data class AuthTokenResponse(
     val accessToken: String = "",
-    val refreshToken: String = ""
+    val refreshToken: String = "",
 ) : BaseResponse()
 
 data class RefreshAccessTokenResponse(
@@ -31,16 +25,15 @@ data class RefreshAccessTokenResponse(
 
 data class GetFoodsPagination(
     val totalCount: Int,
-    val foods: MutableList<Food>
+    val foods: MutableList<Food>,
 ) : BaseResponse()
 
 data class GetFoods(
-    val foods: MutableList<Food>
+    val foods: MutableList<Food>,
 ) : BaseResponse()
 
 data class GetFoodInfo(
-    val food: FoodInfo
+    val food: FoodInfo,
 ) : BaseResponse()
 
-
-class LogoutResponse : EmptyResponse()
+class LogoutResponse : BaseResponse()
