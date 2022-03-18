@@ -1,5 +1,6 @@
 package com.checkmooney.naeats.data
 
+import com.checkmooney.naeats.data.entities.FoodData
 import com.checkmooney.naeats.data.entities.UserProfile
 import javax.inject.Inject
 
@@ -30,5 +31,11 @@ class UserRepository @Inject constructor(
         }
 
         return res.isSuccess()
+    }
+
+    suspend fun getFavoriteFoodList(): List<FoodData> {
+        val res = userRemoteDataSource.getFavoriteFood()
+
+        return res?.foods ?: listOf()
     }
 }

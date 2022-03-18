@@ -11,6 +11,7 @@ import com.checkmooney.naeats.data.entities.UserProfile
 import com.checkmooney.naeats.models.Category
 import com.checkmooney.naeats.models.Food
 import com.checkmooney.naeats.ui.main.recommand.RecommendTab
+import com.checkmooney.naeats.ui.main.setting.MyFoodUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -89,12 +90,12 @@ class MainViewModel @Inject constructor(
     val recoRandomList: LiveData<List<Food>>
         get() = _recoRandomList
 
-    private val _infoFavoriteList = MutableLiveData<List<Food>>()
-    val infoFavoriteList: LiveData<List<Food>>
+    private val _infoFavoriteList = MutableLiveData<List<MyFoodUiState>>()
+    val infoFavoriteList: LiveData<List<MyFoodUiState>>
         get() = _infoFavoriteList
 
-    private val _infoHateList = MutableLiveData<List<Food>>()
-    val infoHateList: LiveData<List<Food>>
+    private val _infoHateList = MutableLiveData<List<MyFoodUiState>>()
+    val infoHateList: LiveData<List<MyFoodUiState>>
         get() = _infoHateList
 
 
@@ -150,14 +151,14 @@ class MainViewModel @Inject constructor(
 
     // Setting
     private suspend fun getAllInfoFavoriteList() {
-        val list = menuRepository.getAllMenu()
-        _infoFavoriteList.value = list
+        val list = userRepository.getFavoriteFoodList()
+        _infoFavoriteList.value = list.map { menu -> MyFoodUiState(menu.id, menu.name, menu.thumbnail) }
     }
 
 
     private suspend fun getAllInfoHateList() {
         val list = menuRepository.getAllMenu()
-        _infoHateList.value = list
+//        _infoHateList.value = list
     }
 
     fun logout() {

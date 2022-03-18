@@ -32,8 +32,8 @@ data class GetFoods(
     val foods: MutableList<Food>,
 ) : BaseResponse()
 
-data class GetFoodInfo(
-    val food: FoodInfo,
+data class GetFavoriteFoodsResponse(
+    val foods: List<FoodData>,
 ) : BaseResponse()
 
 class LogoutResponse : BaseResponse()

@@ -1,5 +1,6 @@
 package com.checkmooney.naeats.data
 
+import com.checkmooney.naeats.data.entities.GetFavoriteFoodsResponse
 import com.checkmooney.naeats.data.entities.GetProfileResponse
 import com.checkmooney.naeats.data.entities.LogoutResponse
 import com.checkmooney.naeats.service.GoogleService
@@ -23,8 +24,13 @@ class UserRemoteDataSource @Inject constructor(
             .getResponse(LogoutResponse())
     }
 
-    suspend fun getUserProfile():GetProfileResponse? {
+    suspend fun getUserProfile(): GetProfileResponse? {
         return apiService.getUserProfile()
+            .getResponse()
+    }
+
+    suspend fun getFavoriteFood(): GetFavoriteFoodsResponse? {
+        return apiService.getLikeFoods()
             .getResponse()
     }
 }

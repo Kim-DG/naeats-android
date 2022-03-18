@@ -1,5 +1,6 @@
 package com.checkmooney.naeats.service
 
+import com.checkmooney.naeats.data.entities.GetFavoriteFoodsResponse
 import com.checkmooney.naeats.data.entities.GetFoods
 import com.checkmooney.naeats.data.entities.GetFoodsPagination
 import com.checkmooney.naeats.data.entities.GetProfileResponse
@@ -23,5 +24,5 @@ interface MainApiService {
     fun getAllFoods(): Call<GetFoods>
 
     @GET("foods/like")
-    fun getLikeFoods(): Call<GetFoods>
+    fun getLikeFoods(): Call<GetFavoriteFoodsResponse>
 }

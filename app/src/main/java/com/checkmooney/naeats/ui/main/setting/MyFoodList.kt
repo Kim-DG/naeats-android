@@ -9,12 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.checkmooney.naeats.R
@@ -22,10 +25,11 @@ import com.checkmooney.naeats.models.Food
 import com.checkmooney.naeats.ui.theme.CheckBlue
 import com.checkmooney.naeats.ui.theme.TextGrey
 import com.checkmooney.naeats.ui.theme.ThemeGrey
+import com.skydoves.landscapist.glide.GlideImage
 
 
 @Composable
-fun MyFoodList(preferenceList: List<Food>) {
+fun MyFoodList(preferenceList: List<MyFoodUiState>) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
@@ -46,11 +50,14 @@ fun MyFoodList(preferenceList: List<Food>) {
 }
 
 @Composable
-fun MyFood(food: Food) {
-    Row(modifier = Modifier.padding(24.dp)) {
-        val openDialog = remember {
-            mutableStateOf(false)
-        }
+fun MyFood(food: MyFoodUiState, xButtonClicked: (String) -> Unit = {}) {
+    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+        val openDialog = rememberSaveable { mutableStateOf(false) }
+        GlideImage(
+            imageModel = food.imageUrl,
+            contentScale = ContentScale.Inside,
+            modifier = Modifier.size(40.dp, 40.dp).padding(end = 10.dp)
+        )
         Text(
             text = food.name, modifier = Modifier
                 .weight(1F)
@@ -69,7 +76,9 @@ fun MyFood(food: Food) {
                 .size(20.dp)
         )
         if (openDialog.value) {
-            settingDialogForm(openDialog) { DeleteDialogContent(openDialog) }
+            settingDialogForm(openDialog) {
+                DeleteDialogContent(openDialog) { xButtonClicked(food.id) }
+            }
         }
     }
 
@@ -77,7 +86,7 @@ fun MyFood(food: Food) {
 
 
 @Composable
-fun DeleteDialogContent(openDialog: MutableState<Boolean>) {
+fun DeleteDialogContent(openDialog: MutableState<Boolean>, okSelected: () -> Unit = {}) {
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(
             modifier = Modifier
@@ -99,7 +108,7 @@ fun DeleteDialogContent(openDialog: MutableState<Boolean>) {
             modifier = Modifier
                 .clickable(onClick = {
                     openDialog.value = false
-                    //삭제
+                    okSelected()
                 })
         )
         Spacer(
