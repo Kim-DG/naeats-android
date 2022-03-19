@@ -23,13 +23,20 @@ data class RefreshAccessTokenResponse(
     val accessToken: String = "",
 ) : BaseResponse()
 
-data class GetFoodsPagination(
-    val totalCount: Int,
-    val foods: MutableList<Food>,
+data class GetAllFoodsResponse(
+    val foods: MutableList<FoodData>
 ) : BaseResponse()
 
-data class GetFoods(
-    val foods: MutableList<Food>,
+data class GetRecoCoolTimeFoodsResponse(
+    val foods: MutableList<FoodData>,
+) : BaseResponse()
+
+data class GetRecoRandomFoodsResponse(
+    val foods: MutableList<FoodData>,
+) : BaseResponse()
+
+data class GetRecoFavoriteFoodsResponse(
+    val foods: MutableList<FoodData>,
 ) : BaseResponse()
 
 data class GetFavoriteFoodsResponse(

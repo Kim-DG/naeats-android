@@ -41,9 +41,11 @@ class MainViewModel @Inject constructor(
         when (item) {
             NavigationItem.TodayEats -> getAllMenuList()
             NavigationItem.Recommend -> {
-                getAllRecoCoolTimeList()
-                getAllRecoFavoriteList()
-                getAllRecoRandomList()
+                viewModelScope.launch {
+                    getAllRecoRandomList()
+                    getAllRecoFavoriteList()
+                    getAllRecoCoolTimeList()
+                }
             }
             NavigationItem.Setting -> {
                 viewModelScope.launch {
@@ -78,16 +80,16 @@ class MainViewModel @Inject constructor(
     val menuList: LiveData<List<Food>>
         get() = _menuList
 
-    private val _recoCoolTimeList = MutableLiveData<List<Food>>()
-    val recoCoolTimeList: LiveData<List<Food>>
+    private val _recoCoolTimeList = MutableLiveData<List<MyFoodUiState>>()
+    val recoCoolTimeList: LiveData<List<MyFoodUiState>>
         get() = _recoCoolTimeList
 
-    private val _recoFavoriteList = MutableLiveData<List<Food>>()
-    val recoFavoriteList: LiveData<List<Food>>
+    private val _recoFavoriteList = MutableLiveData<List<MyFoodUiState>>()
+    val recoFavoriteList: LiveData<List<MyFoodUiState>>
         get() = _recoFavoriteList
 
-    private val _recoRandomList = MutableLiveData<List<Food>>()
-    val recoRandomList: LiveData<List<Food>>
+    private val _recoRandomList = MutableLiveData<List<MyFoodUiState>>()
+    val recoRandomList: LiveData<List<MyFoodUiState>>
         get() = _recoRandomList
 
     private val _infoFavoriteList = MutableLiveData<List<MyFoodUiState>>()
@@ -102,44 +104,51 @@ class MainViewModel @Inject constructor(
     // Recommend
     private fun getAllRecoCoolTimeList() {
         viewModelScope.launch {
-            val list = menuRepository.getAllMenu()
-            _recoCoolTimeList.value = list
+            val list = userRepository.getRecoCoolTimeFoodList()
+            _recoCoolTimeList.value = list.map { menu -> MyFoodUiState(menu.id, menu.name, menu.thumbnail) }
         }
     }
 
+    /*
     fun filterRecoCoolTimeByCategory(category: Category) =
         _recoCoolTimeList.value?.filter {
             if (category == Category.All) true else it.category == category
         }
+    */
 
     private fun getAllRecoFavoriteList() {
         viewModelScope.launch {
-            val list = menuRepository.getAllMenu()
-            _recoFavoriteList.value = list
+            val list = userRepository.getRecoFavoriteFoodList()
+            _recoFavoriteList.value = list.map { menu -> MyFoodUiState(menu.id, menu.name, menu.thumbnail) }
         }
     }
 
+    /*
     fun filterRecoFavoriteByCategory(category: Category) =
         _recoFavoriteList.value?.filter {
             if (category == Category.All) true else it.category == category
         }
+    */
 
     private fun getAllRecoRandomList() {
         viewModelScope.launch {
-            val list = menuRepository.getAllMenu()
-            _recoRandomList.value = list
+            val list = userRepository.getRecoRandomFoodList()
+            _recoRandomList.value = list.map { menu -> MyFoodUiState(menu.id, menu.name, menu.thumbnail) }
         }
     }
 
+    /*
     fun filterRecoRandomByCategory(category: Category) =
         _recoRandomList.value?.filter {
             if (category == Category.All) true else it.category == category
         }
+    */
 
     // Today Eats
     private fun getAllMenuList() {
         viewModelScope.launch {
             val list = menuRepository.getAllMenu()
+            //val list = userRepository.getAllFoodList()
             _menuList.value = list
         }
     }
