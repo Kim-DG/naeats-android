@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.checkmooney.naeats.data.MenuRepository
 import com.checkmooney.naeats.ui.components.NavigationItem
 import com.checkmooney.naeats.data.UserRepository
+import com.checkmooney.naeats.data.entities.FoodData
 import com.checkmooney.naeats.data.entities.UserProfile
 import com.checkmooney.naeats.models.Category
 import com.checkmooney.naeats.models.Food
@@ -42,6 +43,7 @@ class MainViewModel @Inject constructor(
             NavigationItem.TodayEats -> getAllMenuList()
             NavigationItem.Recommend -> {
                 viewModelScope.launch {
+                    getAllList()
                     getAllRecoRandomList()
                     getAllRecoFavoriteList()
                     getAllRecoCoolTimeList()
@@ -80,6 +82,10 @@ class MainViewModel @Inject constructor(
     val menuList: LiveData<List<Food>>
         get() = _menuList
 
+    private val _allList = MutableLiveData<List<FoodData>>()
+    val allList: LiveData<List<FoodData>>
+        get() = _allList
+
     private val _recoCoolTimeList = MutableLiveData<List<MyFoodUiState>>()
     val recoCoolTimeList: LiveData<List<MyFoodUiState>>
         get() = _recoCoolTimeList
@@ -100,6 +106,13 @@ class MainViewModel @Inject constructor(
     val infoHateList: LiveData<List<MyFoodUiState>>
         get() = _infoHateList
 
+    // All
+    private fun getAllList() {
+        viewModelScope.launch {
+            val list = userRepository.getAllFoodList()
+            _allList.value = list
+        }
+    }
 
     // Recommend
     private fun getAllRecoCoolTimeList() {

@@ -56,7 +56,7 @@ object NetworkModule {
 
     @BaseUrl
     @Provides
-    fun provideBaseUrl(): String = "http://13.209.72.236:4000/api/"
+    fun provideBaseUrl(): String = "http://3.34.99.162:4000/api/"
 
     @LoginInterceptorOkHttpClient
     @Provides

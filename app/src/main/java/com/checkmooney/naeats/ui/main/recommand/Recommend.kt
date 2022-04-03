@@ -23,10 +23,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.checkmooney.naeats.R
+import com.checkmooney.naeats.data.entities.FoodData
 import com.checkmooney.naeats.models.Category
 import com.checkmooney.naeats.models.Food
 import com.checkmooney.naeats.ui.main.MainViewModel
+import com.checkmooney.naeats.ui.main.setting.MyFoodUiState
 import com.checkmooney.naeats.ui.theme.*
+import com.skydoves.landscapist.ShimmerParams
+import com.skydoves.landscapist.glide.GlideImage
 
 
 @Preview(showBackground = true)
@@ -110,13 +114,13 @@ fun MenuCategory(selectedTab: RecommendTab, viewModel: MainViewModel = viewModel
         Spacer(modifier = Modifier.height(15.dp))
 
         when (selectedTab) {
-            RecommendTab.ByCoolTime -> viewModel.recoCoolTimeList.observeAsState().value?.let { it ->
+            RecommendTab.ByCoolTime -> viewModel.allList.observeAsState().value?.let { it ->
                 RecommendWindow(it)
             }
-            RecommendTab.ByFavorite -> viewModel.recoFavoriteList.observeAsState().value?.let { it ->
+            RecommendTab.ByFavorite -> viewModel.allList.observeAsState().value?.let { it ->
                 RecommendWindow(it)
             }
-            RecommendTab.ByRandom -> viewModel.recoRandomList.observeAsState().value?.let { it ->
+            RecommendTab.ByRandom -> viewModel.allList.observeAsState().value?.let { it ->
                 RecommendWindow(it)
             }
         }
@@ -126,7 +130,7 @@ fun MenuCategory(selectedTab: RecommendTab, viewModel: MainViewModel = viewModel
 
 @Composable
 fun RecommendWindow(
-    recommendList: List<Food>,
+    recommendList: List<FoodData>,
     viewModel: MainViewModel = viewModel()
 ) {
     Column {
@@ -145,12 +149,15 @@ fun RecommendWindow(
                     Category.All -> recommendList.forEach {
                         RecommendFood(it)
                     }
+                    /*
                     else -> {
                         val filterList = recommendList.filter { it.category == viewModel.categoryIndex.value }
                         filterList.forEach{
                             RecommendFood(it)
                         }
                     }
+
+                     */
                 }
 
                 Spacer(
@@ -168,7 +175,7 @@ fun RecommendWindow(
 }
 
 @Composable
-fun RecommendFood(food: Food) {
+fun RecommendFood(food: FoodData) {
     var favor by remember { mutableStateOf(R.drawable.favorite_border_red) }
     val openDropDown = remember { mutableStateOf(false) }
     Row(
@@ -176,13 +183,15 @@ fun RecommendFood(food: Food) {
             .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
             .height(120.dp)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.sample),
-            contentDescription = "food image",
+        GlideImage(
+            imageModel = food.thumbnail,
             modifier = Modifier
                 .size(120.dp)
-                .clip(RoundedCornerShape(30.dp))
-        )
+                .clip(RoundedCornerShape(30.dp)),
+            failure = {
+                Text(text = "image request failed.")
+            })
+
         Column(
             verticalArrangement = Arrangement.SpaceEvenly, modifier = Modifier
                 .fillMaxHeight()
