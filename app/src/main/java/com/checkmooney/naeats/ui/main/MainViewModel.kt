@@ -109,7 +109,7 @@ class MainViewModel @Inject constructor(
     // All
     private fun getAllList() {
         viewModelScope.launch {
-            val list = userRepository.getAllFoodList()
+            val list = menuRepository.getAllFoodList()
             _allList.value = list
         }
     }
@@ -117,7 +117,7 @@ class MainViewModel @Inject constructor(
     // Recommend
     private fun getAllRecoCoolTimeList() {
         viewModelScope.launch {
-            val list = userRepository.getRecoCoolTimeFoodList()
+            val list = menuRepository.getRecoCoolTimeFoodList()
             _recoCoolTimeList.value = list.map { menu -> MyFoodUiState(menu.id, menu.name, menu.thumbnail) }
         }
     }
@@ -131,7 +131,7 @@ class MainViewModel @Inject constructor(
 
     private fun getAllRecoFavoriteList() {
         viewModelScope.launch {
-            val list = userRepository.getRecoFavoriteFoodList()
+            val list = menuRepository.getRecoFavoriteFoodList()
             _recoFavoriteList.value = list.map { menu -> MyFoodUiState(menu.id, menu.name, menu.thumbnail) }
         }
     }
@@ -145,7 +145,7 @@ class MainViewModel @Inject constructor(
 
     private fun getAllRecoRandomList() {
         viewModelScope.launch {
-            val list = userRepository.getRecoRandomFoodList()
+            val list = menuRepository.getRecoRandomFoodList()
             _recoRandomList.value = list.map { menu -> MyFoodUiState(menu.id, menu.name, menu.thumbnail) }
         }
     }

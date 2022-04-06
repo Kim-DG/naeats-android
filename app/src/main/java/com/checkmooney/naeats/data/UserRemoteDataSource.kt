@@ -27,26 +27,6 @@ class UserRemoteDataSource @Inject constructor(
             .getResponse()
     }
 
-    suspend fun getAllFood(): GetAllFoodsResponse? {
-        return apiService.getAllFoods()
-            .getResponse()
-    }
-
-    suspend fun getRecoCoolTimeFood(): GetRecoCoolTimeFoodsResponse? {
-        return apiService.getRecoCoolTimeFoods()
-            .getResponse()
-    }
-
-    suspend fun getRecoRandomFood(): GetRecoRandomFoodsResponse? {
-        return apiService.getRecoRandomFoods()
-            .getResponse()
-    }
-
-    suspend fun getRecoFavoriteFood(): GetRecoFavoriteFoodsResponse? {
-        return apiService.getRecoFavoriteFoods()
-            .getResponse()
-    }
-
     suspend fun getFavoriteFood(): GetFavoriteFoodsResponse? {
         return apiService.getLikeFoods()
             .getResponse()

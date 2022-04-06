@@ -156,10 +156,8 @@ fun RecommendWindow(
                             RecommendFood(it)
                         }
                     }
-
                      */
                 }
-
                 Spacer(
                     modifier = Modifier
                         .height(8.dp)
