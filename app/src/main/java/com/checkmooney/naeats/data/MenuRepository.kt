@@ -4,10 +4,8 @@ import com.checkmooney.naeats.data.entities.FoodData
 import javax.inject.Inject
 
 class MenuRepository @Inject constructor(
-    private val menuDataSource: MenuDataSource,
     private val menuRemoteDataSource: MenuRemoteDataSource
     ) {
-    suspend fun getAllMenu() = menuDataSource.getAllMenu()
 
     suspend fun getAllFoodList(): MutableList<FoodData> {
         val res = menuRemoteDataSource.getAllFood()

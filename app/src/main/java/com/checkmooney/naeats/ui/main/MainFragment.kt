@@ -36,6 +36,7 @@ class MainFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 NaEatsTheme {
+                    viewModel.viewItem.value?.let { viewModel.updateViewItem(it) }
                     viewModel.viewItem.observeAsState().value?.let { currentViewItem ->
                         NaEatsScaffold(
                             topBar = { TopBar(title = currentViewItem.description) },

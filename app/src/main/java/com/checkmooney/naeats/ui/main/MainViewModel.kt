@@ -40,7 +40,7 @@ class MainViewModel @Inject constructor(
     fun updateViewItem(item: NavigationItem) {
         viewItem.value = item
         when (item) {
-            NavigationItem.TodayEats -> getAllMenuList()
+            NavigationItem.TodayEats -> getAllList()
             NavigationItem.Recommend -> {
                 viewModelScope.launch {
                     getAllList()
@@ -158,14 +158,6 @@ class MainViewModel @Inject constructor(
     */
 
     // Today Eats
-    private fun getAllMenuList() {
-        viewModelScope.launch {
-            val list = menuRepository.getAllMenu()
-            //val list = userRepository.getAllFoodList()
-            _menuList.value = list
-        }
-    }
-
     fun filterMenuByCategory(category: Category) =
         _menuList.value?.filter {
             if (category == Category.All) true else it.category == category
@@ -179,7 +171,7 @@ class MainViewModel @Inject constructor(
 
 
     private suspend fun getAllInfoHateList() {
-        val list = menuRepository.getAllMenu()
+        val list = userRepository.getFavoriteFoodList()
 //        _infoHateList.value = list
     }
 

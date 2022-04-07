@@ -138,12 +138,12 @@ object MainModule {
 
     @Provides
     @RemoteMenuDataSource
-    fun provideRemoteMenuDataSource(apiService: MainApiService): MenuDataSource =
+    fun provideRemoteMenuDataSource(apiService: MainApiService): MenuRemoteDataSource =
         MenuRemoteDataSource(apiService)
 
     @Provides
     fun provideMenuRepository(
-        @RemoteMenuDataSource menuDataSource: MenuDataSource,
+        @RemoteMenuDataSource menuDataSource: MenuRemoteDataSource,
     ): MenuRepository {
         return MenuRepository(menuDataSource)
     }

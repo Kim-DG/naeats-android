@@ -15,17 +15,17 @@ interface MainApiService {
     fun getUserProfile(): Call<GetProfileResponse>
 
     @GET("foods/all")
-    fun getAllFoods(): Call<GetAllFoodsResponse>
+    fun getAllFoods(): Call<GetFoodsResponse>
 
     //쿼리 추가 예정
     @GET("foods")
-    fun getRecoCoolTimeFoods(): Call<GetRecoCoolTimeFoodsResponse>
+    fun getRecoCoolTimeFoods(): Call<GetFoodsResponse>
 
     @GET("foods")
-    fun getRecoRandomFoods(): Call<GetRecoRandomFoodsResponse>
+    fun getRecoRandomFoods(): Call<GetFoodsResponse>
 
     @GET("foods")
-    fun getRecoFavoriteFoods(): Call<GetRecoFavoriteFoodsResponse>
+    fun getRecoFavoriteFoods(): Call<GetFoodsResponse>
 
     @GET("foods/like")
     fun getLikeFoods(): Call<GetFavoriteFoodsResponse> //
