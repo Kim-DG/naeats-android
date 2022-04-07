@@ -33,6 +33,30 @@ class UserRepository @Inject constructor(
         return res.isSuccess()
     }
 
+    suspend fun getAllFoodList(): MutableList<FoodData> {
+        val res = userRemoteDataSource.getAllFood()
+
+        return res?.foods ?: mutableListOf()
+    }
+
+    suspend fun getRecoCoolTimeFoodList(): MutableList<FoodData> {
+        val res = userRemoteDataSource.getRecoCoolTimeFood()
+
+        return res?.foods ?: mutableListOf()
+    }
+
+    suspend fun getRecoRandomFoodList(): MutableList<FoodData> {
+        val res = userRemoteDataSource.getRecoRandomFood()
+
+        return res?.foods ?: mutableListOf()
+    }
+
+    suspend fun getRecoFavoriteFoodList(): MutableList<FoodData> {
+        val res = userRemoteDataSource.getRecoFavoriteFood()
+
+        return res?.foods ?: mutableListOf()
+    }
+
     suspend fun getFavoriteFoodList(): List<FoodData> {
         val res = userRemoteDataSource.getFavoriteFood()
 
