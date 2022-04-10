@@ -29,7 +29,6 @@ import androidx.lifecycle.viewmodel.compose.*
 import com.checkmooney.naeats.R
 import com.checkmooney.naeats.data.entities.FoodData
 import com.checkmooney.naeats.ui.components.simpleVerticalScrollbar
-import com.checkmooney.naeats.models.Category
 import com.checkmooney.naeats.ui.main.MainViewModel
 import com.checkmooney.naeats.ui.main.setting.LogOutDialogContent
 import com.checkmooney.naeats.ui.main.setting.SettingDialogForm

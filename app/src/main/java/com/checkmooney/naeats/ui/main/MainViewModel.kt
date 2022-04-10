@@ -9,8 +9,6 @@ import com.checkmooney.naeats.ui.components.NavigationItem
 import com.checkmooney.naeats.data.UserRepository
 import com.checkmooney.naeats.data.entities.FoodData
 import com.checkmooney.naeats.data.entities.UserProfile
-import com.checkmooney.naeats.models.Category
-import com.checkmooney.naeats.models.Food
 import com.checkmooney.naeats.ui.main.recommand.RecommendTab
 import com.checkmooney.naeats.ui.main.setting.MyFoodUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,14 +28,14 @@ class MainViewModel @Inject constructor(
     val userInfo: LiveData<UserProfile>
         get() = _userProfile
 
-    var categories : List<String> = listOf()
+    var categories : MutableList<String> = mutableListOf()
 
     init {
         viewModelScope.launch {
             val profile = userRepository.getUserProfile()
             profile?.let { _userProfile.value = it }
 
-            categories = menuRepository.getCategories()
+            categories = menuRepository.getCategories().toMutableList()
         }
     }
 
@@ -71,15 +69,15 @@ class MainViewModel @Inject constructor(
     }
 
     fun initCategoryIndex() {
-        _categoryIndex.value = Category.All
+        _categoryIndex.value = 0
     }
 
-    fun updateCategoryIndex(category: Category) {
-        _categoryIndex.value = category
+    fun updateCategoryIndex(index: Int) {
+        _categoryIndex.value = index
     }
 
-    private val _categoryIndex = MutableLiveData(Category.All)
-    val categoryIndex: LiveData<Category>
+    private val _categoryIndex = MutableLiveData(0)
+    val categoryIndex: LiveData<Int>
         get() = _categoryIndex
 
     private val _allList = MutableLiveData<List<FoodData>>()
@@ -125,9 +123,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun filterRecoCoolTimeByCategory(category: Category) =
+    fun filterRecoCoolTimeByCategory(index: Int) =
         _recoCoolTimeList.value?.filter { data ->
-            if (category == Category.All) true else data.categories.any { it == category.title }
+            if (index == 0) true else data.categories.any { it == categories[index] }
         }
 
 

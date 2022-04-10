@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.checkmooney.naeats.R
 import com.checkmooney.naeats.data.entities.FoodData
-import com.checkmooney.naeats.models.Category
 import com.checkmooney.naeats.ui.main.MainViewModel
 import com.checkmooney.naeats.ui.theme.*
 import com.skydoves.landscapist.glide.GlideImage
@@ -83,47 +82,50 @@ fun UnderBar() {
 
 @Composable
 fun MenuCategory(selectedTab: RecommendTab, viewModel: MainViewModel = viewModel()) {
+    var selectedTabIndex by remember { mutableStateOf(0) }
     Column {
-        viewModel.categoryIndex.observeAsState().value?.let {
+        if (viewModel.categories.size != 0) {
             ScrollableTabRow(
                 contentColor = ChoicePink,
-                selectedTabIndex = it.ordinal,
+                selectedTabIndex = selectedTabIndex,
                 backgroundColor = ThemePink,
                 edgePadding = 0.dp
             ) {
-                val categoryList = Category.values().toList()
+                val categoryList = viewModel.categories
+
                 categoryList.forEachIndexed { index, text ->
                     Tab(
                         text = {
                             Text(
-                                text = text.title, fontFamily = FontFamily(
+                                text = text, fontFamily = FontFamily(
                                     Font(
                                         R.font.cafe24surround_air,
                                     )
                                 ), color = Color.Black
                             )
                         },
-                        selected = it.ordinal == index,
-                        onClick = { viewModel.updateCategoryIndex(Category.values()[index]) },
+                        selected = selectedTabIndex == index,
+                        onClick = { selectedTabIndex = index
+                            viewModel.updateCategoryIndex(index) },
                         selectedContentColor = ChoicePink,
                     )
                 }
+
+            }
+            Spacer(modifier = Modifier.height(15.dp))
+
+            when (selectedTab) {
+                RecommendTab.ByCoolTime -> viewModel.recoCoolTimeList.observeAsState().value?.let { it ->
+                    RecommendWindow(it)
+                }
+                RecommendTab.ByFavorite -> viewModel.allList.observeAsState().value?.let { it ->
+                    RecommendWindow(it)
+                }
+                RecommendTab.ByRandom -> viewModel.allList.observeAsState().value?.let { it ->
+                    RecommendWindow(it)
+                }
             }
         }
-        Spacer(modifier = Modifier.height(15.dp))
-
-        when (selectedTab) {
-            RecommendTab.ByCoolTime -> viewModel.recoCoolTimeList.observeAsState().value?.let { it ->
-                RecommendWindow(it)
-            }
-            RecommendTab.ByFavorite -> viewModel.allList.observeAsState().value?.let { it ->
-                RecommendWindow(it)
-            }
-            RecommendTab.ByRandom -> viewModel.allList.observeAsState().value?.let { it ->
-                RecommendWindow(it)
-            }
-        }
-
     }
 }
 
@@ -144,16 +146,15 @@ fun RecommendWindow(
                 )
 
                 when (viewModel.categoryIndex.value) {
-                    Category.All -> recommendList.forEach {
+                    0 -> recommendList.forEach {
                         RecommendFood(it)
                     }
 
                     else -> {
                         val filterList = viewModel.categoryIndex.value?.let {
-                            viewModel.filterRecoCoolTimeByCategory(
-                                it
-                            )
+                            viewModel.filterRecoCoolTimeByCategory(it)
                         }
+                        println(filterList)
                         filterList?.forEach {
                             RecommendFood(it)
                         }
@@ -175,15 +176,15 @@ fun RecommendWindow(
 }
 
 @Composable
-fun RecommendFood(food: FoodData) {
+fun RecommendFood(food: FoodData, viewModel: MainViewModel = viewModel()) {
     var favor by remember {
-        mutableStateOf(
-            if (food.isLike) {
-                R.drawable.favorite_red
-            } else {
-                R.drawable.favorite_border_red
-            }
-        )
+        mutableStateOf(0)
+    }
+
+    favor = if (food.isLike) {
+        R.drawable.favorite_red
+    } else {
+        R.drawable.favorite_border_red
     }
 
     val openDropDown = remember { mutableStateOf(false) }
@@ -258,7 +259,11 @@ fun RecommendFood(food: FoodData) {
 
 @SuppressLint("SimpleDateFormat")
 @Composable
-fun DropDown(openDropDown: MutableState<Boolean>, food: FoodData, viewModel: MainViewModel = viewModel()) {
+fun DropDown(
+    openDropDown: MutableState<Boolean>,
+    food: FoodData,
+    viewModel: MainViewModel = viewModel()
+) {
     MaterialTheme(shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(16.dp))) {
         DropdownMenu(
             expanded = openDropDown.value,
