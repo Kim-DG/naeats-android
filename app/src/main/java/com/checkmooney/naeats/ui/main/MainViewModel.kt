@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.checkmooney.naeats.data.MenuRepository
 import com.checkmooney.naeats.ui.components.NavigationItem
 import com.checkmooney.naeats.data.UserRepository
+import com.checkmooney.naeats.data.entities.EatLog
 import com.checkmooney.naeats.data.entities.FoodData
 import com.checkmooney.naeats.data.entities.UserProfile
 import com.checkmooney.naeats.models.Category
@@ -78,24 +79,20 @@ class MainViewModel @Inject constructor(
     val categoryIndex: LiveData<Category>
         get() = _categoryIndex
 
-    private val _menuList = MutableLiveData<List<Food>>()
-    val menuList: LiveData<List<Food>>
-        get() = _menuList
-
     private val _allList = MutableLiveData<List<FoodData>>()
     val allList: LiveData<List<FoodData>>
         get() = _allList
 
-    private val _recoCoolTimeList = MutableLiveData<List<MyFoodUiState>>()
-    val recoCoolTimeList: LiveData<List<MyFoodUiState>>
+    private val _recoCoolTimeList = MutableLiveData<List<FoodData>>()
+    val recoCoolTimeList: LiveData<List<FoodData>>
         get() = _recoCoolTimeList
 
-    private val _recoFavoriteList = MutableLiveData<List<MyFoodUiState>>()
-    val recoFavoriteList: LiveData<List<MyFoodUiState>>
+    private val _recoFavoriteList = MutableLiveData<List<FoodData>>()
+    val recoFavoriteList: LiveData<List<FoodData>>
         get() = _recoFavoriteList
 
-    private val _recoRandomList = MutableLiveData<List<MyFoodUiState>>()
-    val recoRandomList: LiveData<List<MyFoodUiState>>
+    private val _recoRandomList = MutableLiveData<List<FoodData>>()
+    val recoRandomList: LiveData<List<FoodData>>
         get() = _recoRandomList
 
     private val _infoFavoriteList = MutableLiveData<List<MyFoodUiState>>()
@@ -117,22 +114,19 @@ class MainViewModel @Inject constructor(
     // Recommend
     private fun getAllRecoCoolTimeList() {
         viewModelScope.launch {
-            val list = menuRepository.getRecoCoolTimeFoodList()
-            _recoCoolTimeList.value = list.map { menu -> MyFoodUiState(menu.id, menu.name, menu.thumbnail) }
+            _recoCoolTimeList.value = menuRepository.getRecoCoolTimeFoodList()
         }
     }
 
-    /*
     fun filterRecoCoolTimeByCategory(category: Category) =
-        _recoCoolTimeList.value?.filter {
-            if (category == Category.All) true else it.category == category
+        _recoCoolTimeList.value?.filter { data ->
+            if (category == Category.All) true else data.categories.any { it == category.title }
         }
-    */
+
 
     private fun getAllRecoFavoriteList() {
         viewModelScope.launch {
-            val list = menuRepository.getRecoFavoriteFoodList()
-            _recoFavoriteList.value = list.map { menu -> MyFoodUiState(menu.id, menu.name, menu.thumbnail) }
+            _recoFavoriteList.value = menuRepository.getRecoFavoriteFoodList()
         }
     }
 
@@ -145,8 +139,7 @@ class MainViewModel @Inject constructor(
 
     private fun getAllRecoRandomList() {
         viewModelScope.launch {
-            val list = menuRepository.getRecoRandomFoodList()
-            _recoRandomList.value = list.map { menu -> MyFoodUiState(menu.id, menu.name, menu.thumbnail) }
+            _recoRandomList.value = menuRepository.getRecoRandomFoodList()
         }
     }
 
@@ -157,10 +150,17 @@ class MainViewModel @Inject constructor(
         }
     */
 
+    fun postEatLogs(eatDate: String, description: String, foodId: String){
+        viewModelScope.launch {
+            val eatLogs = EatLog(eatDate, description, foodId)
+            menuRepository.postEatLogs(eatLogs)
+        }
+    }
+
     // Today Eats
     fun filterMenuByCategory(category: Category) =
-        _menuList.value?.filter {
-            if (category == Category.All) true else it.category == category
+        _allList.value?.filter { data ->
+            if (category == Category.All) true else data.categories.any { it == category.title }
         }
 
     // Setting

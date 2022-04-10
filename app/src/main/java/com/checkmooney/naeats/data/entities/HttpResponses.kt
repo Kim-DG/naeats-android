@@ -32,3 +32,5 @@ data class GetFavoriteFoodsResponse(
 ) : BaseResponse()
 
 class LogoutResponse : BaseResponse()
+
+class postEatLogsResponse: BaseResponse()

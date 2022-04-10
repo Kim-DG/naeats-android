@@ -15,14 +15,10 @@ object MenuFakeDataSource : MenuDataSource {
                 Food(Category.Chinese, "마라탕", 0),
                 Food(Category.Korean, "김치찌개", 0),
                 Food(Category.Chinese, "마라샹궈", 0),
-                Food(Category.Noddle, "짜장면", 0),
                 Food(Category.Chinese, "마파두부", 0),
                 Food(Category.Japanese, "초밥", 0),
                 Food(Category.Western, "피자", 0),
                 Food(Category.Western, "파스타", 0),
-                Food(Category.Rice, "김치볶음밥", 0),
-                Food(Category.Noddle, "냉면", 0),
-                Food(Category.Noddle, "라면", 0),
                 Food(Category.SchoolFood, "떡볶이", 0),
             )
         )

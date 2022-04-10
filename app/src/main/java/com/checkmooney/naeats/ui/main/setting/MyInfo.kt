@@ -72,7 +72,7 @@ fun MyInfo(
         }
 
         if (openDialog.value) {
-            settingDialogForm(openDialog) { LogOutDialogContent(openDialog, onLogoutSelected) }
+            SettingDialogForm(openDialog) { LogOutDialogContent(openDialog, onLogoutSelected) }
         }
     }
 }

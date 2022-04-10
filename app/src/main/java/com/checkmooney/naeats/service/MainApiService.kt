@@ -3,6 +3,7 @@ package com.checkmooney.naeats.service
 import com.checkmooney.naeats.data.entities.*
 import dagger.hilt.android.scopes.FragmentScoped
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 
@@ -18,15 +19,19 @@ interface MainApiService {
     fun getAllFoods(): Call<GetFoodsResponse>
 
     //쿼리 추가 예정
-    @GET("foods")
+    @GET("foods/all")
     fun getRecoCoolTimeFoods(): Call<GetFoodsResponse>
 
-    @GET("foods")
+    @GET("foods/all")
     fun getRecoRandomFoods(): Call<GetFoodsResponse>
 
-    @GET("foods")
+    @GET("foods/all")
     fun getRecoFavoriteFoods(): Call<GetFoodsResponse>
 
+    //EatLogs
+    @POST("eat-logs")
+    fun postEatLogs(@Body eatLogs: EatLog): Call<postEatLogsResponse>
+
     @GET("foods/like")
-    fun getLikeFoods(): Call<GetFavoriteFoodsResponse> //
+    fun getLikeFoods(): Call<GetFavoriteFoodsResponse>
 }

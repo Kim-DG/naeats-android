@@ -1,5 +1,6 @@
 package com.checkmooney.naeats.data
 
+import com.checkmooney.naeats.data.entities.EatLog
 import com.checkmooney.naeats.data.entities.FoodData
 import javax.inject.Inject
 
@@ -29,6 +30,10 @@ class MenuRepository @Inject constructor(
         val res = menuRemoteDataSource.getRecoFavoriteFood()
 
         return res?.foods ?: mutableListOf()
+    }
+
+    suspend fun postEatLogs(eatLogs: EatLog) {
+        menuRemoteDataSource.postEatLogs(eatLogs)
     }
 
 }

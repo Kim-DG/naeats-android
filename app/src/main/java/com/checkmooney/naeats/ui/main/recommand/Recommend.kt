@@ -1,5 +1,6 @@
 package com.checkmooney.naeats.ui.main.recommand
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,15 +24,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.checkmooney.naeats.R
+import com.checkmooney.naeats.data.entities.EatLog
 import com.checkmooney.naeats.data.entities.FoodData
 import com.checkmooney.naeats.models.Category
-import com.checkmooney.naeats.models.Food
 import com.checkmooney.naeats.ui.main.MainViewModel
-import com.checkmooney.naeats.ui.main.setting.MyFoodUiState
 import com.checkmooney.naeats.ui.theme.*
-import com.skydoves.landscapist.ShimmerParams
 import com.skydoves.landscapist.glide.GlideImage
-
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 
 @Preview(showBackground = true)
 @Composable
@@ -114,7 +114,7 @@ fun MenuCategory(selectedTab: RecommendTab, viewModel: MainViewModel = viewModel
         Spacer(modifier = Modifier.height(15.dp))
 
         when (selectedTab) {
-            RecommendTab.ByCoolTime -> viewModel.allList.observeAsState().value?.let { it ->
+            RecommendTab.ByCoolTime -> viewModel.recoCoolTimeList.observeAsState().value?.let { it ->
                 RecommendWindow(it)
             }
             RecommendTab.ByFavorite -> viewModel.allList.observeAsState().value?.let { it ->
@@ -143,20 +143,23 @@ fun RecommendWindow(
                     modifier = Modifier
                         .height(8.dp)
                 )
-                //Text(text = selectedTab.toString())
-                //Text(text = viewModel.categoryIndex.value.toString())
-                when(viewModel.categoryIndex.value){
+
+                when (viewModel.categoryIndex.value) {
                     Category.All -> recommendList.forEach {
                         RecommendFood(it)
                     }
-                    /*
+
                     else -> {
-                        val filterList = recommendList.filter { it.category == viewModel.categoryIndex.value }
-                        filterList.forEach{
+                        val filterList = viewModel.categoryIndex.value?.let {
+                            viewModel.filterRecoCoolTimeByCategory(
+                                it
+                            )
+                        }
+                        filterList?.forEach {
                             RecommendFood(it)
                         }
                     }
-                     */
+
                 }
                 Spacer(
                     modifier = Modifier
@@ -174,7 +177,16 @@ fun RecommendWindow(
 
 @Composable
 fun RecommendFood(food: FoodData) {
-    var favor by remember { mutableStateOf(R.drawable.favorite_border_red) }
+    var favor by remember {
+        mutableStateOf(
+            if (food.isLike) {
+                R.drawable.favorite_red
+            } else {
+                R.drawable.favorite_border_red
+            }
+        )
+    }
+
     val openDropDown = remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
@@ -224,7 +236,7 @@ fun RecommendFood(food: FoodData) {
                         .size(30.dp)
                         .clickable(onClick = { openDropDown.value = true })
                 )
-                DropDown(openDropDown)
+                DropDown(openDropDown, food)
             }
             Icon(
                 painter = painterResource(id = favor),
@@ -235,6 +247,7 @@ fun RecommendFood(food: FoodData) {
                     .clickable(onClick = {
                         favor = if (favor == R.drawable.favorite_red) {
                             R.drawable.favorite_border_red
+
                         } else {
                             R.drawable.favorite_red
                         }
@@ -244,8 +257,9 @@ fun RecommendFood(food: FoodData) {
     }
 }
 
+@SuppressLint("SimpleDateFormat")
 @Composable
-fun DropDown(openDropDown: MutableState<Boolean>) {
+fun DropDown(openDropDown: MutableState<Boolean>, food: FoodData, viewModel: MainViewModel = viewModel()) {
     MaterialTheme(shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(16.dp))) {
         DropdownMenu(
             expanded = openDropDown.value,
@@ -254,7 +268,12 @@ fun DropDown(openDropDown: MutableState<Boolean>) {
                 .wrapContentSize()
         ) {
             DropdownMenuItem(
-                onClick = { openDropDown.value = false }, Modifier
+                onClick = {
+                    openDropDown.value = false
+                    val dataFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                    val dateTime = dataFormat.format(System.currentTimeMillis())
+                    viewModel.postEatLogs(dateTime, "eatLogs",food.id)
+                }, Modifier
             ) {
                 Text(
                     "오늘 먹었어요",

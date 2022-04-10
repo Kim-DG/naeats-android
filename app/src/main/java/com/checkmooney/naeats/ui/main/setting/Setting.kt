@@ -72,7 +72,7 @@ enum class SettingTab {
 
 
 @Composable
-fun settingDialogForm(openDialog: MutableState<Boolean>, content: @Composable () -> Unit) {
+fun SettingDialogForm(openDialog: MutableState<Boolean>, content: @Composable () -> Unit) {
     Dialog(onDismissRequest = { openDialog.value = false }) {
         Surface(
             modifier = Modifier

@@ -30,23 +30,31 @@ import com.checkmooney.naeats.R
 import com.checkmooney.naeats.ui.components.simpleVerticalScrollbar
 import com.checkmooney.naeats.models.Category
 import com.checkmooney.naeats.ui.main.MainViewModel
+import com.checkmooney.naeats.ui.main.setting.LogOutDialogContent
+import com.checkmooney.naeats.ui.main.setting.SettingDialogForm
 import com.checkmooney.naeats.ui.theme.*
 
 @Composable
 fun TodayEats(viewModel: MainViewModel = viewModel()) {
     var selectedTab by rememberSaveable { mutableStateOf(TodayEatsTab.ByKeyword) }
+    val openDialog = rememberSaveable { mutableStateOf(false) }
     NaEatsTheme() {
         Column {
             Tab(selectedTab) { selectedTab = it }
-            viewModel.menuList.observeAsState().value?.let { it ->
+            viewModel.allList.observeAsState().value?.let { it ->
                 when (selectedTab) {
-                    TodayEatsTab.ByKeyword -> SearchByKeyword(it.map { food -> food.name })
+                    TodayEatsTab.ByKeyword -> SearchByKeyword(it.map { food -> food.name }) {
+                        openDialog.value = it
+                    }
                     TodayEatsTab.ByCategory -> SearchByCategory(
                         onCategoryChanged = { category ->
                             viewModel.filterMenuByCategory(category)?.map { menu -> menu.name }
                         })
                 }
             }
+        }
+        if (openDialog.value) {
+            SettingDialogForm(openDialog) { EatDialogContent(openDialog) }
         }
     }
 }
@@ -88,7 +96,7 @@ fun Tab(selectedTab: TodayEatsTab, onClick: (TodayEatsTab) -> Unit = {}) {
 @Composable
 fun SearchByKeyword(
     menuList: List<String>,
-    onItemClicked: () -> Unit = {}
+    onItemClicked: (Boolean) -> Unit = {}
 ) {
     var searchText by rememberSaveable { mutableStateOf("") }
     val searchList =
@@ -97,7 +105,9 @@ fun SearchByKeyword(
     Column {
         SearchBar(searchText) { searchText = it }
         ListView(searchList) {
-            onItemClicked()
+            if(it) {
+                onItemClicked(true)
+            }
         }
     }
 }
@@ -167,7 +177,7 @@ fun ListItem(
 }
 
 @Composable
-fun ListView(list: List<String>, onItemClick: () -> Unit = {}) {
+fun ListView(list: List<String>, onItemClick: (Boolean) -> Unit = {}) {
     val lazyListState = rememberLazyListState()
     LazyColumn(
         state = lazyListState,
@@ -175,7 +185,7 @@ fun ListView(list: List<String>, onItemClick: () -> Unit = {}) {
     ) {
         items(list) { item ->
             ListItem(text = item, modifier = Modifier
-                .clickable { onItemClick() }
+                .clickable { onItemClick(true) }
                 .background(MaterialTheme.colors.background)
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp, vertical = 24.dp))
@@ -241,6 +251,38 @@ fun SearchByCategory(onCategoryChanged: (Category) -> List<String>?) {
                 ListView(list = onCategoryChanged(selectedCategory) ?: listOf()) {}
             }
         }
+    }
+}
+
+@Composable
+fun EatDialogContent(openDialog: MutableState<Boolean>) {
+    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Spacer(
+            modifier = Modifier
+                .height(24.dp)
+        )
+        Text(
+            "등록하시겠습니까?", textAlign = TextAlign.Center, modifier = Modifier
+                .padding(vertical = 8.dp)
+                .wrapContentSize(), letterSpacing = 1.5.sp, color = TextGrey
+        )
+        Spacer(
+            modifier = Modifier
+                .height(12.dp)
+        )
+        Icon(
+            painter = painterResource(id = R.drawable.check),
+            contentDescription = "dialog check",
+            tint = CheckBlue,
+            modifier = Modifier
+                .clickable(onClick = {
+                    openDialog.value = false
+                })
+        )
+        Spacer(
+            modifier = Modifier
+                .height(16.dp)
+        )
     }
 }
 
