@@ -9,3 +9,7 @@ data class EatLogRequest(
     val description: String = ".",
     val foodId: String
 )
+
+data class PreferenceRequest(
+    val isDislike: Boolean
+)

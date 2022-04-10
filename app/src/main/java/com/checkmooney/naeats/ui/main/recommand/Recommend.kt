@@ -116,13 +116,13 @@ fun MenuCategory(selectedTab: RecommendTab, viewModel: MainViewModel = viewModel
 
             when (selectedTab) {
                 RecommendTab.ByCoolTime -> viewModel.recoCoolTimeList.observeAsState().value?.let { it ->
-                    RecommendWindow(it)
+                    RecommendWindow(it, 0)
                 }
-                RecommendTab.ByFavorite -> viewModel.allList.observeAsState().value?.let { it ->
-                    RecommendWindow(it)
+                RecommendTab.ByFavorite -> viewModel.recoFavoriteList.observeAsState().value?.let { it ->
+                    RecommendWindow(it, 1)
                 }
-                RecommendTab.ByRandom -> viewModel.allList.observeAsState().value?.let { it ->
-                    RecommendWindow(it)
+                RecommendTab.ByRandom -> viewModel.recoRandomList.observeAsState().value?.let { it ->
+                    RecommendWindow(it,2)
                 }
             }
         }
@@ -131,7 +131,8 @@ fun MenuCategory(selectedTab: RecommendTab, viewModel: MainViewModel = viewModel
 
 @Composable
 fun RecommendWindow(
-    recommendList: List<FoodData>,
+    recommendList: MutableList<FoodData>,
+    index: Int,
     viewModel: MainViewModel = viewModel()
 ) {
     Column {
@@ -146,17 +147,28 @@ fun RecommendWindow(
                 )
 
                 when (viewModel.categoryIndex.value) {
-                    0 -> recommendList.forEach {
-                        RecommendFood(it)
+                    0 -> {
+                        recommendList.forEach {
+                            RecommendFood(it,index)
+                        }
                     }
 
                     else -> {
                         val filterList = viewModel.categoryIndex.value?.let {
-                            viewModel.filterRecoCoolTimeByCategory(it)
+                            when(index){
+                                0 -> {
+                                    viewModel.filterRecoCoolTimeByCategory(it)
+                                }
+                                1 -> {
+                                    viewModel.filterRecoFavoriteByCategory(it)
+                                }
+                                else -> {
+                                    viewModel.filterRecoRandomByCategory(it)
+                                }
+                            }
                         }
-                        println(filterList)
                         filterList?.forEach {
-                            RecommendFood(it)
+                            RecommendFood(it,index)
                         }
                     }
 
@@ -176,11 +188,10 @@ fun RecommendWindow(
 }
 
 @Composable
-fun RecommendFood(food: FoodData, viewModel: MainViewModel = viewModel()) {
+fun RecommendFood(food: FoodData, index: Int, viewModel: MainViewModel = viewModel()) {
     var favor by remember {
         mutableStateOf(0)
     }
-
     favor = if (food.isLike) {
         R.drawable.favorite_red
     } else {
@@ -245,11 +256,12 @@ fun RecommendFood(food: FoodData, viewModel: MainViewModel = viewModel()) {
                 modifier = Modifier
                     .size(30.dp)
                     .clickable(onClick = {
-                        favor = if (favor == R.drawable.favorite_red) {
-                            R.drawable.favorite_border_red
-
-                        } else {
+                        viewModel.updateMyFoodLike(food, index)
+                        food.isLike = !food.isLike
+                        favor = if (food.isLike) {
                             R.drawable.favorite_red
+                        } else {
+                            R.drawable.favorite_border_red
                         }
                     })
             )
@@ -275,7 +287,7 @@ fun DropDown(
                 onClick = {
                     openDropDown.value = false
                     viewModel.todayEatFoodSelected(food.id)
-                }, Modifier
+                }
             ) {
                 Text(
                     "오늘 먹었어요",
@@ -290,7 +302,10 @@ fun DropDown(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            DropdownMenuItem(onClick = { openDropDown.value = false }) {
+            DropdownMenuItem(onClick = {
+                openDropDown.value = false
+                viewModel.updateMyFoodDislike(food)
+            }) {
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()

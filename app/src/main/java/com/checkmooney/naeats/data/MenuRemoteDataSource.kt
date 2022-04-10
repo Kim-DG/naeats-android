@@ -36,8 +36,13 @@ class MenuRemoteDataSource @Inject constructor(private val apiService: MainApiSe
             .getResponse()
     }
 
-    suspend fun addEatFoodLog(id: String, date :String): EatLogResponse? {
+    suspend fun addEatFoodLog(id: String, date: String): EatLogResponse? {
         return apiService.postEatLog(EatLogRequest(eatDate = date, foodId = id))
+            .getResponse()
+    }
+
+    suspend fun updatePreference(id: String, isDislike: Boolean):PreferenceResponse?{
+        return apiService.postPreference(id,PreferenceRequest(isDislike = isDislike))
             .getResponse()
     }
 }

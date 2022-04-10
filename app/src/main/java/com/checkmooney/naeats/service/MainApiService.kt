@@ -3,10 +3,7 @@ package com.checkmooney.naeats.service
 import com.checkmooney.naeats.data.entities.*
 import dagger.hilt.android.scopes.FragmentScoped
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 @FragmentScoped
 interface MainApiService {
@@ -40,4 +37,10 @@ interface MainApiService {
 
     @POST("eat-logs")
     fun postEatLog(@Body request: EatLogRequest): Call<EatLogResponse>
+
+    @POST("foods/like/{id}")
+    fun postPreference(
+        @Path("id") id: String,
+        @Body request: PreferenceRequest
+    ): Call<PreferenceResponse>
 }

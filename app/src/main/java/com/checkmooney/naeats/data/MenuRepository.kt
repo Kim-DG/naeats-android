@@ -52,4 +52,11 @@ class MenuRepository @Inject constructor(
 
         println(res?.isSuccess())
     }
+
+    suspend fun updateMyFavor(id: String, isDislike: Boolean){
+        val res =
+            menuRemoteDataSource.updatePreference(id,isDislike)
+
+        println(res?.isSuccess())
+    }
 }
