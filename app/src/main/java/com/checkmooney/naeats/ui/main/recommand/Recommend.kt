@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.checkmooney.naeats.R
-import com.checkmooney.naeats.data.entities.EatLog
 import com.checkmooney.naeats.data.entities.FoodData
 import com.checkmooney.naeats.models.Category
 import com.checkmooney.naeats.ui.main.MainViewModel
@@ -270,9 +269,7 @@ fun DropDown(openDropDown: MutableState<Boolean>, food: FoodData, viewModel: Mai
             DropdownMenuItem(
                 onClick = {
                     openDropDown.value = false
-                    val dataFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                    val dateTime = dataFormat.format(System.currentTimeMillis())
-                    viewModel.postEatLogs(dateTime, "eatLogs",food.id)
+                    viewModel.todayEatFoodSelected(food.id)
                 }, Modifier
             ) {
                 Text(

@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.checkmooney.naeats.data.MenuRepository
 import com.checkmooney.naeats.ui.components.NavigationItem
 import com.checkmooney.naeats.data.UserRepository
-import com.checkmooney.naeats.data.entities.EatLog
 import com.checkmooney.naeats.data.entities.FoodData
 import com.checkmooney.naeats.data.entities.UserProfile
 import com.checkmooney.naeats.models.Category
@@ -15,7 +14,6 @@ import com.checkmooney.naeats.models.Food
 import com.checkmooney.naeats.ui.main.recommand.RecommendTab
 import com.checkmooney.naeats.ui.main.setting.MyFoodUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -158,13 +156,6 @@ class MainViewModel @Inject constructor(
             if (category == Category.All) true else it.category == category
         }
     */
-
-    fun postEatLogs(eatDate: String, description: String, foodId: String){
-        viewModelScope.launch {
-            val eatLogs = EatLog(eatDate, description, foodId)
-            menuRepository.postEatLogs(eatLogs)
-        }
-    }
 
     // Today Eats
     fun filterMenuByCategory(category: String) {

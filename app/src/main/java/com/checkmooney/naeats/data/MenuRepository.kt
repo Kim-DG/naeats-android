@@ -46,7 +46,7 @@ class MenuRepository @Inject constructor(
     }
 
     suspend fun addTodayEatLog(foodId: String) {
-        val date = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:sss.SSS'Z'", java.util.Locale.getDefault())
+        val date = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'", java.util.Locale.getDefault())
         val res =
             menuRemoteDataSource.addEatFoodLog(foodId, date.format(System.currentTimeMillis()))
 
