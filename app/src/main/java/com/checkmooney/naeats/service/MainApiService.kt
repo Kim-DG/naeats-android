@@ -39,5 +39,5 @@ interface MainApiService {
     fun getCategorizedFoods(@Query("categories") category: String): Call<GetFoodsResponse>
 
     @POST("eat-logs")
-    fun postEatLog(@Body request: EatLogRequest): Call<BaseResponse>
+    fun postEatLog(@Body request: EatLogRequest): Call<EatLogResponse>
 }

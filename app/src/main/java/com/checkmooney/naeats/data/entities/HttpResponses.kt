@@ -34,3 +34,4 @@ data class CategoryListResponse(
 ) : BaseResponse()
 
 class LogoutResponse : BaseResponse()
+class EatLogResponse : BaseResponse()
