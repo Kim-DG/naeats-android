@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.*
 import com.checkmooney.naeats.R
+import com.checkmooney.naeats.data.entities.FoodData
 import com.checkmooney.naeats.ui.components.simpleVerticalScrollbar
 import com.checkmooney.naeats.models.Category
 import com.checkmooney.naeats.ui.main.MainViewModel
@@ -43,13 +44,18 @@ fun TodayEats(viewModel: MainViewModel = viewModel()) {
             Tab(selectedTab) { selectedTab = it }
             viewModel.allList.observeAsState().value?.let { it ->
                 when (selectedTab) {
-                    TodayEatsTab.ByKeyword -> SearchByKeyword(it.map { food -> food.name }) {
-                        openDialog.value = it
-                    }
+                    TodayEatsTab.ByKeyword -> SearchByKeyword(
+                        menuList =  it,
+                        onItemClicked = viewModel::todayEatFoodSelected
+                    )
                     TodayEatsTab.ByCategory -> SearchByCategory(
+                        allCategory = viewModel.categories,
+                        categorizedFoods = viewModel.categorizedList.observeAsState().value,
                         onCategoryChanged = { category ->
-                            viewModel.filterMenuByCategory(category)?.map { menu -> menu.name }
-                        })
+                            viewModel.filterMenuByCategory(category)
+                        },
+                        onItemClicked = viewModel::todayEatFoodSelected
+                    )
                 }
             }
         }
@@ -95,19 +101,16 @@ fun Tab(selectedTab: TodayEatsTab, onClick: (TodayEatsTab) -> Unit = {}) {
 
 @Composable
 fun SearchByKeyword(
-    menuList: List<String>,
-    onItemClicked: (Boolean) -> Unit = {}
+    menuList: List<FoodData>,
+    onItemClicked: (String) -> Unit = {}
 ) {
     var searchText by rememberSaveable { mutableStateOf("") }
     val searchList =
-        menuList.filter { food -> food.contains(searchText) }
-            .sorted()
+        menuList.filter { food -> food.name.contains(searchText) }.sortedBy { it.name }
     Column {
         SearchBar(searchText) { searchText = it }
         ListView(searchList) {
-            if(it) {
-                onItemClicked(true)
-            }
+            onItemClicked(it)
         }
     }
 }
@@ -177,15 +180,15 @@ fun ListItem(
 }
 
 @Composable
-fun ListView(list: List<String>, onItemClick: (Boolean) -> Unit = {}) {
+fun ListView(list: List<FoodData>, onItemClick: (String) -> Unit = {}) {
     val lazyListState = rememberLazyListState()
     LazyColumn(
         state = lazyListState,
         modifier = Modifier.simpleVerticalScrollbar(lazyListState)
     ) {
         items(list) { item ->
-            ListItem(text = item, modifier = Modifier
-                .clickable { onItemClick(true) }
+            ListItem(text = item.name, modifier = Modifier
+                .clickable { onItemClick(item.id) }
                 .background(MaterialTheme.colors.background)
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp, vertical = 24.dp))
@@ -194,16 +197,21 @@ fun ListView(list: List<String>, onItemClick: (Boolean) -> Unit = {}) {
 }
 
 @Composable
-fun SearchByCategory(onCategoryChanged: (Category) -> List<String>?) {
-    val categories = Category.values().drop(1)
+fun SearchByCategory(
+    allCategory: List<String>,
+    categorizedFoods: List<FoodData>?,
+    onCategoryChanged: (String) -> Unit,
+    onItemClicked: (String) -> Unit
+) {
+    val categories = allCategory.drop(1)
     val categoriesCount = categories.count()
     val rowCount = 4
     val nColumns = (categoriesCount / rowCount) + (if (categoriesCount % rowCount == 0) 0 else 1)
 
-    var selectedCategory by rememberSaveable { mutableStateOf(Category.All) }
+    var selectedCategory by rememberSaveable { mutableStateOf("전체") }
     Column {
         when (selectedCategory) {
-            Category.All -> {
+            "전체" -> {
                 LazyColumn {
                     items(nColumns) { col ->
                         Row(
@@ -214,7 +222,7 @@ fun SearchByCategory(onCategoryChanged: (Category) -> List<String>?) {
                             for (n in col * rowCount until rowCount * (col + 1)) {
                                 val category = if (n < categoriesCount) categories[n] else null
                                 ListItem(
-                                    text = category?.title ?: "",
+                                    text = category ?: "",
                                     modifier = Modifier
                                         .clickable {
                                             category?.let {
@@ -230,17 +238,19 @@ fun SearchByCategory(onCategoryChanged: (Category) -> List<String>?) {
                 }
             }
             else -> {
+                onCategoryChanged(selectedCategory)
+
                 Row(
                     modifier = Modifier
                         .background(ThemePink)
                         .fillMaxWidth()
                 ) {
                     ListItem(
-                        text = selectedCategory.title, modifier = Modifier
+                        text = selectedCategory, modifier = Modifier
                             .padding(16.dp)
                             .weight(1.0f)
                     )
-                    IconButton(onClick = { selectedCategory = Category.All }) {
+                    IconButton(onClick = { selectedCategory = "전체" }) {
                         Icon(
                             imageVector = Icons.Rounded.Close,
                             contentDescription = null,
@@ -248,7 +258,7 @@ fun SearchByCategory(onCategoryChanged: (Category) -> List<String>?) {
                         )
                     }
                 }
-                ListView(list = onCategoryChanged(selectedCategory) ?: listOf()) {}
+                ListView(list = categorizedFoods ?: listOf()) { onItemClicked(it) }
             }
         }
     }

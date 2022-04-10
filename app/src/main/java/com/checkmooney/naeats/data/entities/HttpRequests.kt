@@ -4,8 +4,8 @@ data class GoogleAuthRequest(
     val idToken: String
 )
 
-data class EatLog(
+data class EatLogRequest(
     val eatDate: String,
-    val description: String,
+    val description: String = ".",
     val foodId: String
 )

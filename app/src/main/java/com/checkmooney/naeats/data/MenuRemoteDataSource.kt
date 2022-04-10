@@ -1,9 +1,9 @@
 package com.checkmooney.naeats.data
 
 import com.checkmooney.naeats.data.entities.BaseResponse
-import com.checkmooney.naeats.data.entities.EatLog
+import com.checkmooney.naeats.data.entities.CategoryListResponse
+import com.checkmooney.naeats.data.entities.EatLogRequest
 import com.checkmooney.naeats.data.entities.GetFoodsResponse
-import com.checkmooney.naeats.data.entities.postEatLogsResponse
 import com.checkmooney.naeats.service.MainApiService
 import com.checkmooney.naeats.util.getResponse
 import javax.inject.Inject
@@ -29,9 +29,18 @@ class MenuRemoteDataSource @Inject constructor(private val apiService: MainApiSe
             .getResponse()
     }
 
-    suspend fun postEatLogs(eatLogs: EatLog): postEatLogsResponse? {
-        return apiService.postEatLogs(eatLogs = eatLogs)
+    suspend fun getCategoryList(): CategoryListResponse? {
+        return apiService.getCategories()
             .getResponse()
     }
 
+    suspend fun getCategorizedFoodList(category: String): GetFoodsResponse? {
+        return apiService.getCategorizedFoods(category)
+            .getResponse()
+    }
+
+    suspend fun addEatFoodLog(id: String, date :String): BaseResponse? {
+        return apiService.postEatLog(EatLogRequest(eatDate = date, foodId = id))
+            .getResponse()
+    }
 }

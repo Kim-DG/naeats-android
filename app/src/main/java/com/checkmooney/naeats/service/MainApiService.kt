@@ -6,6 +6,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 @FragmentScoped
 interface MainApiService {
@@ -28,10 +29,15 @@ interface MainApiService {
     @GET("foods/all")
     fun getRecoFavoriteFoods(): Call<GetFoodsResponse>
 
-    //EatLogs
-    @POST("eat-logs")
-    fun postEatLogs(@Body eatLogs: EatLog): Call<postEatLogsResponse>
-
     @GET("foods/like")
-    fun getLikeFoods(): Call<GetFavoriteFoodsResponse>
+    fun getLikeFoods(): Call<GetFavoriteFoodsResponse> //
+
+    @GET("foods/category")
+    fun getCategories(): Call<CategoryListResponse>
+
+    @GET("foods/all")
+    fun getCategorizedFoods(@Query("categories") category: String): Call<GetFoodsResponse>
+
+    @POST("eat-logs")
+    fun postEatLog(@Body request: EatLogRequest): Call<BaseResponse>
 }

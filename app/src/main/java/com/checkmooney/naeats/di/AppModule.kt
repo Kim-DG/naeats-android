@@ -9,10 +9,7 @@ import com.checkmooney.naeats.service.SharedPrefService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
-import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.android.scopes.FragmentScoped
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.Interceptor.Companion.invoke
@@ -123,28 +120,14 @@ object MainModule {
             .create(MainApiService::class.java)
     }
 
-    @Qualifier
-    @Retention(AnnotationRetention.RUNTIME)
-    annotation class FakeMenuDataSource
-
-    @Qualifier
-    @Retention(AnnotationRetention.RUNTIME)
-    annotation class RemoteMenuDataSource
-
-
     @Provides
-    @FakeMenuDataSource
-    fun provideFakeMenuDataSource(): MenuDataSource = MenuFakeDataSource
-
-    @Provides
-    @RemoteMenuDataSource
     fun provideRemoteMenuDataSource(apiService: MainApiService): MenuRemoteDataSource =
         MenuRemoteDataSource(apiService)
 
     @Provides
     fun provideMenuRepository(
-        @RemoteMenuDataSource menuDataSource: MenuRemoteDataSource,
+        remoteDataSource: MenuRemoteDataSource
     ): MenuRepository {
-        return MenuRepository(menuDataSource)
+        return MenuRepository(remoteDataSource)
     }
 }

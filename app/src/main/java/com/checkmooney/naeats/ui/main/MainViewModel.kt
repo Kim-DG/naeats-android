@@ -15,6 +15,7 @@ import com.checkmooney.naeats.models.Food
 import com.checkmooney.naeats.ui.main.recommand.RecommendTab
 import com.checkmooney.naeats.ui.main.setting.MyFoodUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,10 +32,14 @@ class MainViewModel @Inject constructor(
     val userInfo: LiveData<UserProfile>
         get() = _userProfile
 
+    var categories : List<String> = listOf()
+
     init {
         viewModelScope.launch {
             val profile = userRepository.getUserProfile()
             profile?.let { _userProfile.value = it }
+
+            categories = menuRepository.getCategories()
         }
     }
 
@@ -81,6 +86,10 @@ class MainViewModel @Inject constructor(
 
     private val _allList = MutableLiveData<List<FoodData>>()
     val allList: LiveData<List<FoodData>>
+        get() = _allList
+
+    private val _categorizedFoodList = MutableLiveData<List<FoodData>>()
+    val categorizedList: LiveData<List<FoodData>>
         get() = _allList
 
     private val _recoCoolTimeList = MutableLiveData<List<FoodData>>()
@@ -158,10 +167,19 @@ class MainViewModel @Inject constructor(
     }
 
     // Today Eats
-    fun filterMenuByCategory(category: Category) =
-        _allList.value?.filter { data ->
-            if (category == Category.All) true else data.categories.any { it == category.title }
+    fun filterMenuByCategory(category: String) {
+        viewModelScope.launch {
+            val foodData = menuRepository.getFoodListByCategory(category)
+            _categorizedFoodList.value = foodData
         }
+    }
+
+    fun todayEatFoodSelected(foodId: String) {
+        viewModelScope.launch {
+            menuRepository.addTodayEatLog(foodId = foodId)
+            //TODO: 통신 결과 팝업으로 띄워줘야함
+        }
+    }
 
     // Setting
     private suspend fun getAllInfoFavoriteList() {

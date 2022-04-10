@@ -1,7 +1,5 @@
 package com.checkmooney.naeats.data.entities
 
-import com.checkmooney.naeats.models.Food
-
 abstract class BaseResponse(
     open var statusCode: Int = 0,
     open var errorCode: Int = 0,
@@ -31,6 +29,8 @@ data class GetFavoriteFoodsResponse(
     val foods: List<FoodData>,
 ) : BaseResponse()
 
-class LogoutResponse : BaseResponse()
+data class CategoryListResponse(
+    val categories: List<String>
+) : BaseResponse()
 
-class postEatLogsResponse: BaseResponse()
+class LogoutResponse : BaseResponse()
