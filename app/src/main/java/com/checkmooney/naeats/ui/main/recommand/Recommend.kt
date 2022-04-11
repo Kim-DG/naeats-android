@@ -28,8 +28,6 @@ import com.checkmooney.naeats.data.entities.FoodData
 import com.checkmooney.naeats.ui.main.MainViewModel
 import com.checkmooney.naeats.ui.theme.*
 import com.skydoves.landscapist.glide.GlideImage
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 
 @Preview(showBackground = true)
 @Composable
@@ -40,6 +38,7 @@ fun TodayRecommend(viewModel: MainViewModel = viewModel()) {
         painterResource(id = R.drawable.favorite_border_grey),
         painterResource(id = R.drawable.question_mark_grey)
     )
+    viewModel.getCategories()
     NaEatsTheme() {
         Column {
             TabRow(
@@ -84,14 +83,14 @@ fun UnderBar() {
 fun MenuCategory(selectedTab: RecommendTab, viewModel: MainViewModel = viewModel()) {
     var selectedTabIndex by remember { mutableStateOf(0) }
     Column {
-        if (viewModel.categories.size != 0) {
+        if (viewModel.categories.value!!.isNotEmpty()) {
             ScrollableTabRow(
                 contentColor = ChoicePink,
                 selectedTabIndex = selectedTabIndex,
                 backgroundColor = ThemePink,
                 edgePadding = 0.dp
             ) {
-                val categoryList = viewModel.categories
+                val categoryList = viewModel.categories.value!!
 
                 categoryList.forEachIndexed { index, text ->
                     Tab(
@@ -105,13 +104,15 @@ fun MenuCategory(selectedTab: RecommendTab, viewModel: MainViewModel = viewModel
                             )
                         },
                         selected = selectedTabIndex == index,
-                        onClick = { selectedTabIndex = index
-                            viewModel.updateCategoryIndex(index) },
+                        onClick = {
+                            selectedTabIndex = index
+                            viewModel.updateCategoryIndex(index)
+                        },
                         selectedContentColor = ChoicePink,
                     )
                 }
-
             }
+
             Spacer(modifier = Modifier.height(15.dp))
 
             when (selectedTab) {
@@ -122,7 +123,7 @@ fun MenuCategory(selectedTab: RecommendTab, viewModel: MainViewModel = viewModel
                     RecommendWindow(it, 1)
                 }
                 RecommendTab.ByRandom -> viewModel.recoRandomList.observeAsState().value?.let { it ->
-                    RecommendWindow(it,2)
+                    RecommendWindow(it, 2)
                 }
             }
         }
@@ -149,13 +150,13 @@ fun RecommendWindow(
                 when (viewModel.categoryIndex.value) {
                     0 -> {
                         recommendList.forEach {
-                            RecommendFood(it,index)
+                            RecommendFood(it, index)
                         }
                     }
 
                     else -> {
                         val filterList = viewModel.categoryIndex.value?.let {
-                            when(index){
+                            when (index) {
                                 0 -> {
                                     viewModel.filterRecoCoolTimeByCategory(it)
                                 }
@@ -168,7 +169,7 @@ fun RecommendWindow(
                             }
                         }
                         filterList?.forEach {
-                            RecommendFood(it,index)
+                            RecommendFood(it, index)
                         }
                     }
 

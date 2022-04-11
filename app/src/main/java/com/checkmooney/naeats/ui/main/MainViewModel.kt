@@ -12,6 +12,7 @@ import com.checkmooney.naeats.data.entities.UserProfile
 import com.checkmooney.naeats.ui.main.recommand.RecommendTab
 import com.checkmooney.naeats.ui.main.setting.MyFoodUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,14 +29,17 @@ class MainViewModel @Inject constructor(
     val userInfo: LiveData<UserProfile>
         get() = _userProfile
 
-    var categories : MutableList<String> = mutableListOf()
+    private var _categories = MutableLiveData<List<String>>(listOf("전체","분식","한식","양식","간식","일식","중식","다이어트"))
+    val categories: LiveData<List<String>>
+        get() = _categories
+
 
     init {
         viewModelScope.launch {
             val profile = userRepository.getUserProfile()
             profile?.let { _userProfile.value = it }
 
-            categories = menuRepository.getCategories().toMutableList()
+            _categories.value = menuRepository.getCategories()
         }
     }
 
@@ -60,11 +64,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun updateRecommendList(index: RecommendTab) {
-        when (index) {
-            //RecommendTab.ByCoolTime ->
-            //RecommendTab.ByFavorite ->
-            //RecommendTab.ByRandom ->
+    fun getCategories(){
+        viewModelScope.launch {
+            _categories.value = menuRepository.getCategories()
         }
     }
 
@@ -125,7 +127,7 @@ class MainViewModel @Inject constructor(
 
     fun filterRecoCoolTimeByCategory(index: Int) =
         _recoCoolTimeList.value?.filter { data ->
-            if (index == 0) true else data.categories.any { it == categories[index] }
+            if (index == 0) true else data.categories.any { it == categories.value!![index] }
         }
 
 
@@ -138,7 +140,7 @@ class MainViewModel @Inject constructor(
 
     fun filterRecoFavoriteByCategory(index: Int) =
         _recoFavoriteList.value?.filter { data ->
-            if (index == 0) true else data.categories.any { it == categories[index] }
+            if (index == 0) true else data.categories.any { it == categories.value!![index]}
         }
 
 
@@ -151,7 +153,7 @@ class MainViewModel @Inject constructor(
 
     fun filterRecoRandomByCategory(index: Int) =
         _recoRandomList.value?.filter { data ->
-            if (index == 0) true else data.categories.any { it == categories[index] }
+            if (index == 0) true else data.categories.any { it == categories.value!![index] }
         }
 
 

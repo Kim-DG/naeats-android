@@ -35,7 +35,7 @@ class MenuRepository @Inject constructor(
     suspend fun getCategories(): List<String> {
         val defaultList = listOf("전체")
         val res = menuRemoteDataSource.getCategoryList()
-
+        println(defaultList + (res?.categories ?: listOf()))
         return defaultList + (res?.categories ?: listOf())
     }
 

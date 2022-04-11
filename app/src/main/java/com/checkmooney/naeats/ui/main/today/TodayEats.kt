@@ -48,7 +48,7 @@ fun TodayEats(viewModel: MainViewModel = viewModel()) {
                         onItemClicked = viewModel::todayEatFoodSelected
                     )
                     TodayEatsTab.ByCategory -> SearchByCategory(
-                        allCategory = viewModel.categories,
+                        allCategory = viewModel.categories.value!!,
                         categorizedFoods = viewModel.categorizedList.observeAsState().value,
                         onCategoryChanged = { category ->
                             viewModel.filterMenuByCategory(category)
