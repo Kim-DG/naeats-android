@@ -22,7 +22,7 @@ import com.checkmooney.naeats.R
 import com.checkmooney.naeats.data.entities.UserProfile
 import com.checkmooney.naeats.ui.theme.*
 import com.skydoves.landscapist.glide.GlideImage
-
+import com.checkmooney.naeats.util.SettingDialogForm
 
 @Composable
 fun MyInfo(
@@ -72,7 +72,7 @@ fun MyInfo(
         }
 
         if (openDialog.value) {
-            SettingDialogForm(openDialog) { LogOutDialogContent(openDialog, onLogoutSelected) }
+            SettingDialogForm(onCancel = { openDialog.value = false }) { LogOutDialogContent(openDialog, onLogoutSelected) }
         }
     }
 }

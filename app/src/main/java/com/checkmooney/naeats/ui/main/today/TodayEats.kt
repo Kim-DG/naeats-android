@@ -31,21 +31,26 @@ import com.checkmooney.naeats.data.entities.FoodData
 import com.checkmooney.naeats.ui.components.simpleVerticalScrollbar
 import com.checkmooney.naeats.ui.main.MainViewModel
 import com.checkmooney.naeats.ui.main.setting.LogOutDialogContent
-import com.checkmooney.naeats.ui.main.setting.SettingDialogForm
+import com.checkmooney.naeats.util.SettingDialogForm
 import com.checkmooney.naeats.ui.theme.*
 
 @Composable
 fun TodayEats(viewModel: MainViewModel = viewModel()) {
     var selectedTab by rememberSaveable { mutableStateOf(TodayEatsTab.ByKeyword) }
-    val openDialog = rememberSaveable { mutableStateOf(false) }
+    var openDialog by rememberSaveable { mutableStateOf(false) }
+    var tmpFoodId by rememberSaveable { mutableStateOf("") }
+
     NaEatsTheme() {
         Column {
             Tab(selectedTab) { selectedTab = it }
             viewModel.allList.observeAsState().value?.let { it ->
                 when (selectedTab) {
                     TodayEatsTab.ByKeyword -> SearchByKeyword(
-                        menuList =  it,
-                        onItemClicked = viewModel::todayEatFoodSelected
+                        menuList = it,
+                        onItemClicked = {
+                            openDialog = true
+                            tmpFoodId = it
+                        }
                     )
                     TodayEatsTab.ByCategory -> SearchByCategory(
                         allCategory = viewModel.categories.value!!,
@@ -53,13 +58,25 @@ fun TodayEats(viewModel: MainViewModel = viewModel()) {
                         onCategoryChanged = { category ->
                             viewModel.filterMenuByCategory(category)
                         },
-                        onItemClicked = viewModel::todayEatFoodSelected
+                        onItemClicked = {
+                            openDialog = true
+                            tmpFoodId = it
+                        }
                     )
                 }
             }
         }
-        if (openDialog.value) {
-            SettingDialogForm(openDialog) { EatDialogContent(openDialog) }
+    }
+    if (openDialog) {
+        SettingDialogForm(onCancel = {
+            openDialog = false
+            tmpFoodId = ""
+        }) {
+            EatDialogContent(foodId = tmpFoodId, okClicked = {
+                openDialog = false
+                viewModel.todayEatFoodSelected(it)
+                tmpFoodId = ""
+            })
         }
     }
 }
@@ -166,7 +183,7 @@ fun SearchBar(searchText: String = "", valueChanged: ((String) -> Unit) = {}) {
 fun ListItem(
     modifier: Modifier = Modifier,
     text: String = "dfdf",
-    fontSize: TextUnit = 18.sp,
+    fontSize: TextUnit = 17.sp,
     textAlign: TextAlign? = null,
 ) {
     Text(
@@ -264,7 +281,7 @@ fun SearchByCategory(
 }
 
 @Composable
-fun EatDialogContent(openDialog: MutableState<Boolean>) {
+fun EatDialogContent(foodId: String, okClicked: (String) -> Unit) {
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(
             modifier = Modifier
@@ -283,10 +300,7 @@ fun EatDialogContent(openDialog: MutableState<Boolean>) {
             painter = painterResource(id = R.drawable.check),
             contentDescription = "dialog check",
             tint = CheckBlue,
-            modifier = Modifier
-                .clickable(onClick = {
-                    openDialog.value = false
-                })
+            modifier = Modifier.clickable(onClick = { okClicked(foodId) })
         )
         Spacer(
             modifier = Modifier

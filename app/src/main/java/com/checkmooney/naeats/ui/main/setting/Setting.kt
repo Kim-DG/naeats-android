@@ -45,16 +45,20 @@ fun Setting(viewModel: MainViewModel = viewModel()) {
             UnderBar()
             when (selectedTab) {
                 SettingTab.ByFavorite -> viewModel.infoFavoriteList.observeAsState().value?.let { it ->
-                    MyFoodList(it)
+                    MyFoodList(
+                        it,
+                        xButtonClicked = { id -> viewModel.updateFoodPreference(true, id) })
                 }
                 SettingTab.ByHate -> viewModel.infoHateList.observeAsState().value?.let { it ->
-                    MyFoodList(it)
+                    MyFoodList(
+                        it,
+                        xButtonClicked = { id -> viewModel.updateFoodPreference(false, id) })
                 }
                 SettingTab.ByMyInfo -> {
                     viewModel.userInfo.observeAsState().value?.let {
                         MyInfo(
                             userInfo = it,
-                            onLogoutSelected = {viewModel.logout()}
+                            onLogoutSelected = { viewModel.logout() }
                         )
                     }
 
@@ -69,17 +73,3 @@ enum class SettingTab {
     ByFavorite, ByHate, ByMyInfo
 }
 
-
-
-@Composable
-fun SettingDialogForm(openDialog: MutableState<Boolean>, content: @Composable () -> Unit) {
-    Dialog(onDismissRequest = { openDialog.value = false }) {
-        Surface(
-            modifier = Modifier
-                .width(240.dp)
-                .wrapContentHeight(), shape = RoundedCornerShape(12.dp), color = ThemePink
-        ) {
-            content()
-        }
-    }
-}

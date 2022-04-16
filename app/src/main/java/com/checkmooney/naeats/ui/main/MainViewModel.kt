@@ -198,7 +198,6 @@ class MainViewModel @Inject constructor(
     fun todayEatFoodSelected(foodId: String) {
         viewModelScope.launch {
             menuRepository.addTodayEatLog(foodId = foodId)
-            //TODO: 통신 결과 팝업으로 띄워줘야함
         }
     }
 
@@ -212,6 +211,14 @@ class MainViewModel @Inject constructor(
     private suspend fun getAllInfoHateList() {
         val list = userRepository.getFavoriteFoodList()
 //        _infoHateList.value = list
+    }
+
+    fun updateFoodPreference(isLike: Boolean, foodId: String) {
+        viewModelScope.launch {
+            val result = menuRepository.updateMyFavor(foodId, !isLike)
+            if (!result) return@launch
+            if (isLike) getAllInfoFavoriteList() else getAllInfoHateList()
+        }
     }
 
     fun logout() {

@@ -22,11 +22,12 @@ import com.checkmooney.naeats.R
 import com.checkmooney.naeats.ui.theme.CheckBlue
 import com.checkmooney.naeats.ui.theme.TextGrey
 import com.checkmooney.naeats.ui.theme.ThemeGrey
+import com.checkmooney.naeats.util.SettingDialogForm
 import com.skydoves.landscapist.glide.GlideImage
 
 
 @Composable
-fun MyFoodList(preferenceList: List<MyFoodUiState>) {
+fun MyFoodList(preferenceList: List<MyFoodUiState>, xButtonClicked : (String) -> Unit) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
@@ -36,7 +37,7 @@ fun MyFoodList(preferenceList: List<MyFoodUiState>) {
                     .height(12.dp)
             )
             preferenceList.forEach {
-                MyFood(it)
+                MyFood(it, xButtonClicked = xButtonClicked)
             }
             Spacer(
                 modifier = Modifier
@@ -73,7 +74,7 @@ fun MyFood(food: MyFoodUiState, xButtonClicked: (String) -> Unit = {}) {
                 .size(20.dp)
         )
         if (openDialog.value) {
-            SettingDialogForm(openDialog) {
+            SettingDialogForm(onCancel = { openDialog.value = false }) {
                 DeleteDialogContent(openDialog) { xButtonClicked(food.id) }
             }
         }
