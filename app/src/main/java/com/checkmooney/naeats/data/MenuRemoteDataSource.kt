@@ -11,6 +11,11 @@ class MenuRemoteDataSource @Inject constructor(private val apiService: MainApiSe
             .getResponse()
     }
 
+    suspend fun testGetRecoCoolTimeFoodList(): RecommendFoodsResponse? {
+        return apiService.testGetRecoCoolTimeFoods()
+            .getResponse()
+    }
+
     suspend fun getRecoCoolTimeFood(): GetFoodsResponse? {
         return apiService.getRecoCoolTimeFoods()
             .getResponse()
