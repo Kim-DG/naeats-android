@@ -16,15 +16,7 @@ interface MainApiService {
     @GET("foods/all")
     fun getAllFoods(): Call<GetFoodsResponse>
 
-    @GET("foods/recommends")
-    fun testGetRecoCoolTimeFoods(
-        @Query("page") page: Int = 1,
-        @Query("limit") limit: Int = 1000,
-        @Query("day") day: Int = 0,
-        @Query("isEat") isEat: Boolean = false,
-        @Query("orderBy") order: String = "DESC"
-    ): Call<RecommendFoodsResponse>
-
+    //쿼리 추가 예정
     @GET("foods/all")
     fun getRecoCoolTimeFoods(): Call<GetFoodsResponse>
 

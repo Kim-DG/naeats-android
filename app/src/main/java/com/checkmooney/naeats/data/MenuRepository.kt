@@ -1,7 +1,6 @@
 package com.checkmooney.naeats.data
 
 import com.checkmooney.naeats.data.entities.FoodData
-import com.checkmooney.naeats.data.entities.RecommendFood
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 
@@ -13,12 +12,6 @@ class MenuRepository @Inject constructor(
         val res = menuRemoteDataSource.getAllFood()
 
         return res?.foods ?: mutableListOf()
-    }
-
-    suspend fun testGetRecoCoolTimes(): MutableList<RecommendFood> {
-        val res = menuRemoteDataSource.testGetRecoCoolTimeFoodList()
-
-        return res?.recommends ?: mutableListOf()
     }
 
     suspend fun getRecoCoolTimeFoodList(): MutableList<FoodData> {

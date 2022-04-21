@@ -22,38 +22,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.checkmooney.naeats.R
 import com.checkmooney.naeats.data.entities.FoodData
 import com.checkmooney.naeats.ui.main.MainViewModel
 import com.checkmooney.naeats.ui.theme.*
 import com.skydoves.landscapist.glide.GlideImage
-import kotlinx.coroutines.delay
 
 @Preview(showBackground = true)
 @Composable
 fun TodayRecommend(viewModel: MainViewModel = viewModel()) {
-    val openDialog = rememberSaveable { mutableStateOf(false) }
     var selectedTab by rememberSaveable { mutableStateOf(RecommendTab.ByCoolTime) }
     val icons = listOf(
         painterResource(id = R.drawable.alarm_grey),
         painterResource(id = R.drawable.favorite_border_grey),
         painterResource(id = R.drawable.question_mark_grey)
     )
-    LaunchedEffect(true) {
-        while (true) {
-            openDialog.value = viewModel.categories.value!!.isEmpty()
-            if (!openDialog.value) {
-                break
-            }
-            delay(300)
-        }
-    }
-    if (openDialog.value) {
-        LoadingDialog()
-    }
-    NaEatsTheme {
+    viewModel.getCategories()
+    NaEatsTheme() {
         Column {
             TabRow(
                 contentColor = ChoicePink,
@@ -73,9 +59,7 @@ fun TodayRecommend(viewModel: MainViewModel = viewModel()) {
                 }
             }
             UnderBar()
-            if (viewModel.categories.value!!.isNotEmpty()) {
-                MenuCategory(selectedTab)
-            }
+            MenuCategory(selectedTab)
         }
     }
 }
@@ -99,46 +83,48 @@ fun UnderBar() {
 fun MenuCategory(selectedTab: RecommendTab, viewModel: MainViewModel = viewModel()) {
     var selectedTabIndex by remember { mutableStateOf(0) }
     Column {
-        ScrollableTabRow(
-            contentColor = ChoicePink,
-            selectedTabIndex = selectedTabIndex,
-            backgroundColor = ThemePink,
-            edgePadding = 0.dp
-        ) {
-            val categoryList = viewModel.categories.value!!
-            categoryList.forEachIndexed { index, text ->
-                Tab(
-                    text = {
-                        Text(
-                            text = text, fontFamily = FontFamily(
-                                Font(
-                                    R.font.cafe24surround_air,
-                                )
-                            ), color = Color.Black
-                        )
-                    },
-                    selected = selectedTabIndex == index,
-                    onClick = {
-                        selectedTabIndex = index
-                        viewModel.updateCategoryIndex(index)
-                    },
-                    selectedContentColor = ChoicePink,
-                )
+        if (viewModel.categories.value!!.isNotEmpty()) {
+            ScrollableTabRow(
+                contentColor = ChoicePink,
+                selectedTabIndex = selectedTabIndex,
+                backgroundColor = ThemePink,
+                edgePadding = 0.dp
+            ) {
+                val categoryList = viewModel.categories.value!!
+
+                categoryList.forEachIndexed { index, text ->
+                    Tab(
+                        text = {
+                            Text(
+                                text = text, fontFamily = FontFamily(
+                                    Font(
+                                        R.font.cafe24surround_air,
+                                    )
+                                ), color = Color.Black
+                            )
+                        },
+                        selected = selectedTabIndex == index,
+                        onClick = {
+                            selectedTabIndex = index
+                            viewModel.updateCategoryIndex(index)
+                        },
+                        selectedContentColor = ChoicePink,
+                    )
+                }
             }
 
-        }
+            Spacer(modifier = Modifier.height(15.dp))
 
-        Spacer(modifier = Modifier.height(15.dp))
-
-        when (selectedTab) {
-            RecommendTab.ByCoolTime -> viewModel.recoCoolTimeList.observeAsState().value?.let { it ->
-                RecommendWindow(it, 0)
-            }
-            RecommendTab.ByFavorite -> viewModel.recoFavoriteList.observeAsState().value?.let { it ->
-                RecommendWindow(it, 1)
-            }
-            RecommendTab.ByRandom -> viewModel.recoRandomList.observeAsState().value?.let { it ->
-                RecommendWindow(it, 2)
+            when (selectedTab) {
+                RecommendTab.ByCoolTime -> viewModel.recoCoolTimeList.observeAsState().value?.let { it ->
+                    RecommendWindow(it, 0)
+                }
+                RecommendTab.ByFavorite -> viewModel.recoFavoriteList.observeAsState().value?.let { it ->
+                    RecommendWindow(it, 1)
+                }
+                RecommendTab.ByRandom -> viewModel.recoRandomList.observeAsState().value?.let { it ->
+                    RecommendWindow(it, 2)
+                }
             }
         }
     }
@@ -334,12 +320,5 @@ fun DropDown(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun LoadingDialog() {
-    Dialog(onDismissRequest = { }) {
-        CircularProgressIndicator(color = ChoicePink)
     }
 }

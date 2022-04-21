@@ -33,10 +33,6 @@ data class CategoryListResponse(
     val categories: List<String>
 ) : BaseResponse()
 
-data class RecommendFoodsResponse(
-    val recommends: MutableList<RecommendFood>
-) : BaseResponse()
-
 class LogoutResponse : BaseResponse()
 class EatLogResponse : BaseResponse()
 class PreferenceResponse : BaseResponse()

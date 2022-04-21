@@ -29,7 +29,7 @@ class MainViewModel @Inject constructor(
     val userInfo: LiveData<UserProfile>
         get() = _userProfile
 
-    private var _categories = MutableLiveData<List<String>>(listOf())
+    private var _categories = MutableLiveData<List<String>>(listOf("전체","분식","한식","양식","간식","일식","중식","다이어트"))
     val categories: LiveData<List<String>>
         get() = _categories
 
