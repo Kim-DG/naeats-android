@@ -16,23 +16,15 @@ interface MainApiService {
     @GET("foods/all")
     fun getAllFoods(): Call<GetFoodsResponse>
 
-    @GET("foods/recommends")
-    fun testGetRecoCoolTimeFoods(
+    @GET("recommends")
+    fun getRecommendFoods(
         @Query("page") page: Int = 1,
-        @Query("limit") limit: Int = 1000,
-        @Query("day") day: Int = 0,
-        @Query("isEat") isEat: Boolean = false,
-        @Query("orderBy") order: String = "DESC"
+        @Query("limit") limit: Int,
+        @Query("day") day: Int,
+        @Query("isEat") isEat: Boolean,
+        @Query("orderBy") order: String,
+        @Query("isLike") isLike:Boolean
     ): Call<RecommendFoodsResponse>
-
-    @GET("foods/all")
-    fun getRecoCoolTimeFoods(): Call<GetFoodsResponse>
-
-    @GET("foods/all")
-    fun getRecoRandomFoods(): Call<GetFoodsResponse>
-
-    @GET("foods/all")
-    fun getRecoFavoriteFoods(): Call<GetFoodsResponse>
 
     @GET("foods/like")
     fun getLikeFoods(): Call<GetFavoriteFoodsResponse> //

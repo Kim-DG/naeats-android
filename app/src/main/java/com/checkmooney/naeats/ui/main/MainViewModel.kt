@@ -8,11 +8,10 @@ import com.checkmooney.naeats.data.MenuRepository
 import com.checkmooney.naeats.ui.components.NavigationItem
 import com.checkmooney.naeats.data.UserRepository
 import com.checkmooney.naeats.data.entities.FoodData
+import com.checkmooney.naeats.data.entities.RecommendFood
 import com.checkmooney.naeats.data.entities.UserProfile
-import com.checkmooney.naeats.ui.main.recommand.RecommendTab
 import com.checkmooney.naeats.ui.main.setting.MyFoodUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,7 +37,6 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val profile = userRepository.getUserProfile()
             profile?.let { _userProfile.value = it }
-
             _categories.value = menuRepository.getCategories()
         }
     }
@@ -64,12 +62,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getCategories(){
-        viewModelScope.launch {
-            _categories.value = menuRepository.getCategories()
-        }
-    }
-
     fun initCategoryIndex() {
         _categoryIndex.value = 0
     }
@@ -90,16 +82,16 @@ class MainViewModel @Inject constructor(
     val categorizedList: LiveData<MutableList<FoodData>>
         get() = _allList
 
-    private val _recoCoolTimeList = MutableLiveData<MutableList<FoodData>>()
-    val recoCoolTimeList: LiveData<MutableList<FoodData>>
+    private val _recoCoolTimeList = MutableLiveData<MutableList<RecommendFood>>()
+    val recoCoolTimeList: LiveData<MutableList<RecommendFood>>
         get() = _recoCoolTimeList
 
-    private val _recoFavoriteList = MutableLiveData<MutableList<FoodData>>()
-    val recoFavoriteList: LiveData<MutableList<FoodData>>
+    private val _recoFavoriteList = MutableLiveData<MutableList<RecommendFood>>()
+    val recoFavoriteList: LiveData<MutableList<RecommendFood>>
         get() = _recoFavoriteList
 
-    private val _recoRandomList = MutableLiveData<MutableList<FoodData>>()
-    val recoRandomList: LiveData<MutableList<FoodData>>
+    private val _recoRandomList = MutableLiveData<MutableList<RecommendFood>>()
+    val recoRandomList: LiveData<MutableList<RecommendFood>>
         get() = _recoRandomList
 
     private val _infoFavoriteList = MutableLiveData<List<MyFoodUiState>>()
@@ -119,9 +111,10 @@ class MainViewModel @Inject constructor(
     }
 
     // Recommend
-    private fun getAllRecoCoolTimeList() {
+    fun getAllRecoCoolTimeList() {
         viewModelScope.launch {
-            _recoCoolTimeList.value = menuRepository.getRecoCoolTimeFoodList()
+            _recoCoolTimeList.value = mutableListOf()
+            _recoCoolTimeList.value = menuRepository.getRecommendFoodList(0,true,"ASC",false, 10)
         }
     }
 
@@ -131,9 +124,10 @@ class MainViewModel @Inject constructor(
         }
 
 
-    private fun getAllRecoFavoriteList() {
+    fun getAllRecoFavoriteList() {
         viewModelScope.launch {
-            _recoFavoriteList.value = menuRepository.getRecoFavoriteFoodList()
+            _recoFavoriteList.value = mutableListOf()
+            _recoFavoriteList.value = menuRepository.getRecommendFoodList(0,false,"RAND",true, 10)
         }
     }
 
@@ -144,9 +138,10 @@ class MainViewModel @Inject constructor(
         }
 
 
-    private fun getAllRecoRandomList() {
+    fun getAllRecoRandomList() {
         viewModelScope.launch {
-            _recoRandomList.value = menuRepository.getRecoRandomFoodList()
+            _recoRandomList.value = mutableListOf()
+            _recoRandomList.value = menuRepository.getRecommendFoodList(0,false,"RAND",false, 10)
         }
     }
 
@@ -157,16 +152,15 @@ class MainViewModel @Inject constructor(
         }
 
 
-    fun updateMyFoodLike(food: FoodData, index: Int){
-        val newFood = FoodData(food.id, food.name, food.thumbnail, !food.isLike, food.categories)
+    fun updateMyFoodLike(food: RecommendFood, index: Int){
+        val newFood = RecommendFood(food.id, food.name, food.thumbnail, !food.isLike, food.lastEatDate, food.categories)
         when(index){
             0 -> {
                 val i = _recoCoolTimeList.value!!.indexOf(food)
                 _recoCoolTimeList.value!![i] = newFood
             }
             1 -> {
-                val i = _recoFavoriteList.value!!.indexOf(food)
-                _recoFavoriteList.value!![i] = newFood
+                _recoFavoriteList.value!!.remove(food)
             }
             2 -> {
                 val i = _recoRandomList.value!!.indexOf(food)
@@ -175,13 +169,11 @@ class MainViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-
-            println("!!" + _recoCoolTimeList.value)
             menuRepository.updateMyFavor(food.id, false)
         }
     }
 
-    fun updateMyFoodDislike(food: FoodData){
+    fun updateMyFoodDislike(food: RecommendFood){
         viewModelScope.launch {
             menuRepository.updateMyFavor(food.id, true)
         }

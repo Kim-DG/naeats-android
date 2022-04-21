@@ -15,28 +15,10 @@ class MenuRepository @Inject constructor(
         return res?.foods ?: mutableListOf()
     }
 
-    suspend fun testGetRecoCoolTimes(): MutableList<RecommendFood> {
-        val res = menuRemoteDataSource.testGetRecoCoolTimeFoodList()
+    suspend fun getRecommendFoodList(day: Int, isEat: Boolean, order: String, isLike: Boolean, limit: Int): MutableList<RecommendFood> {
+        val res = menuRemoteDataSource.getRecommendFoodList(day = day, isEat = isEat, order = order, isLike = isLike, limit = limit)
 
         return res?.recommends ?: mutableListOf()
-    }
-
-    suspend fun getRecoCoolTimeFoodList(): MutableList<FoodData> {
-        val res = menuRemoteDataSource.getRecoCoolTimeFood()
-
-        return res?.foods ?: mutableListOf()
-    }
-
-    suspend fun getRecoRandomFoodList(): MutableList<FoodData> {
-        val res = menuRemoteDataSource.getRecoRandomFood()
-
-        return res?.foods ?: mutableListOf()
-    }
-
-    suspend fun getRecoFavoriteFoodList(): MutableList<FoodData> {
-        val res = menuRemoteDataSource.getRecoFavoriteFood()
-
-        return res?.foods ?: mutableListOf()
     }
 
     suspend fun getCategories(): List<String> {
