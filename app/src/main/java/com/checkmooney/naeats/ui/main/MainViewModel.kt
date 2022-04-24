@@ -199,10 +199,9 @@ class MainViewModel @Inject constructor(
         _infoFavoriteList.value = list.map { menu -> MyFoodUiState(menu.id, menu.name, menu.thumbnail) }
     }
 
-
     private suspend fun getAllInfoHateList() {
         val list = userRepository.getFavoriteFoodList()
-//        _infoHateList.value = list
+        //_infoHateList.value = list
     }
 
     fun updateFoodPreference(isLike: Boolean, foodId: String) {
