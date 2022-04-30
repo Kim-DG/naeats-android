@@ -31,4 +31,9 @@ class UserRemoteDataSource @Inject constructor(
         return apiService.getLikeFoods()
             .getResponse()
     }
+
+    suspend fun getDislikeFood(): GetFavoriteFoodsResponse? {
+        return apiService.getDislikeFoods()
+            .getResponse()
+    }
 }

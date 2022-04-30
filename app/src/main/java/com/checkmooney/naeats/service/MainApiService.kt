@@ -29,6 +29,9 @@ interface MainApiService {
     @GET("foods/like")
     fun getLikeFoods(): Call<GetFavoriteFoodsResponse> //
 
+    @GET("foods/dislike")
+    fun getDislikeFoods(): Call<GetFavoriteFoodsResponse>
+
     @GET("foods/category")
     fun getCategories(): Call<CategoryListResponse>
 
