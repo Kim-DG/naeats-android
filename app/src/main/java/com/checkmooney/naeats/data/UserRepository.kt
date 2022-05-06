@@ -38,4 +38,10 @@ class UserRepository @Inject constructor(
 
         return res?.foods ?: listOf()
     }
+
+    suspend fun getDislikeFoodList(): List<FoodData> {
+        val res = userRemoteDataSource.getDislikeFood()
+
+        return res?.foods ?: listOf()
+    }
 }
