@@ -245,10 +245,9 @@ fun RecommendFood(
         "D+X"
     } else {
         val currentTime = Calendar.getInstance()
-        currentTime.set(Calendar.HOUR,0)
-        currentTime.set(Calendar.MINUTE,0)
-        currentTime.set(Calendar.SECOND,0)
-        val date = SimpleDateFormat("yyyy-MM-dd").parse(food.lastEatDate!!)
+        currentTime.add(Calendar.HOUR, -9)
+
+        val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(food.lastEatDate!!)
         val dDate = (currentTime.time.time - date.time) / (1000 * 60 * 60 * 24)
         "D+$dDate"
     }

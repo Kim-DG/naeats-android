@@ -3,6 +3,7 @@ package com.checkmooney.naeats.data
 import com.checkmooney.naeats.data.entities.FoodData
 import com.checkmooney.naeats.data.entities.RecommendFood
 import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 class MenuRepository @Inject constructor(
@@ -35,9 +36,12 @@ class MenuRepository @Inject constructor(
     }
 
     suspend fun addTodayEatLog(foodId: String) {
-        val date = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'", java.util.Locale.getDefault())
+        val currentTime = Calendar.getInstance()
+        val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        date.timeZone = TimeZone.getTimeZone("UTC")
+
         val res =
-            menuRemoteDataSource.addEatFoodLog(foodId, date.format(System.currentTimeMillis()))
+            menuRemoteDataSource.addEatFoodLog(foodId, date.format(currentTime.time))
 
         println(res?.isSuccess())
     }

@@ -110,6 +110,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun filterAllList(index: Int) =
+        _allList.value?.filter { data ->
+            if (index == 0) true else data.categories.any { it == categories.value!![index] }
+        }
+
     // Recommend
     fun getAllRecoCoolTimeList() {
         viewModelScope.launch {
