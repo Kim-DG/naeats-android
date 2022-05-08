@@ -119,7 +119,7 @@ class MainViewModel @Inject constructor(
     fun getAllRecoCoolTimeList() {
         viewModelScope.launch {
             _recoCoolTimeList.value = mutableListOf()
-            _recoCoolTimeList.value = menuRepository.getRecommendFoodList(0,true,"ASC",false, 10)
+            _recoCoolTimeList.value = menuRepository.getRecommendFoodList(0,true,"ASC",false, 5)
         }
     }
 
@@ -132,7 +132,7 @@ class MainViewModel @Inject constructor(
     fun getAllRecoFavoriteList() {
         viewModelScope.launch {
             _recoFavoriteList.value = mutableListOf()
-            _recoFavoriteList.value = menuRepository.getRecommendFoodList(0,false,"RAND",true, 10)
+            _recoFavoriteList.value = menuRepository.getRecommendFoodList(0,false,"RAND",true, 5)
         }
     }
 
@@ -146,7 +146,7 @@ class MainViewModel @Inject constructor(
     fun getAllRecoRandomList() {
         viewModelScope.launch {
             _recoRandomList.value = mutableListOf()
-            _recoRandomList.value = menuRepository.getRecommendFoodList(0,false,"RAND",false, 10)
+            _recoRandomList.value = menuRepository.getRecommendFoodList(0,false,"RAND",false, 5)
         }
     }
 
