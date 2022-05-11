@@ -48,9 +48,9 @@ class MainViewModel @Inject constructor(
             NavigationItem.Recommend -> {
                 viewModelScope.launch {
                     getAllList()
-                    getAllRecoRandomList()
-                    getAllRecoFavoriteList()
-                    getRecoCoolTimeList("전체")
+                    getRecoRandomList()
+                    getRecoFavoriteList()
+                    getRecoCoolTimeList()
                 }
             }
             NavigationItem.Setting -> {
@@ -116,7 +116,7 @@ class MainViewModel @Inject constructor(
         }
 
     // Recommend
-    fun getRecoCoolTimeList(category: String) {
+    fun getRecoCoolTimeList(category: String = "전체") {
         viewModelScope.launch {
             _recoCoolTimeList.value = mutableListOf()
             if(category == "전체"){
@@ -128,38 +128,29 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun filterRecoCoolTimeByCategory(index: Int) =
-        _recoCoolTimeList.value?.filter { data ->
-            if (index == 0) true else data.categories.any { it == categories.value!![index] }
-        }
-
-
-    fun getAllRecoFavoriteList() {
+    fun getRecoFavoriteList(category: String = "전체") {
         viewModelScope.launch {
             _recoFavoriteList.value = mutableListOf()
-            _recoFavoriteList.value = menuRepository.getRecommendFoodList(0,false,"RAND",true, 5)
+            if(category == "전체"){
+                _recoFavoriteList.value = menuRepository.getRecommendFoodList(0,false,"RAND",true, 5)
+            }
+            else{
+                _recoFavoriteList.value = menuRepository.getRecommendFoodListByCategories(category,0,false,"RAND",true, 5)
+            }
         }
     }
 
-    fun filterRecoFavoriteByCategory(index: Int) =
-        _recoFavoriteList.value?.filter { data ->
-            if (index == 0) true else data.categories.any { it == categories.value!![index]}
-        }
-
-
-    fun getAllRecoRandomList() {
+    fun getRecoRandomList(category: String = "전체") {
         viewModelScope.launch {
             _recoRandomList.value = mutableListOf()
-            _recoRandomList.value = menuRepository.getRecommendFoodList(0,false,"RAND",false, 5)
+            if(category == "전체"){
+                _recoRandomList.value = menuRepository.getRecommendFoodList(0,false,"RAND",false, 5)
+            }
+            else{
+                _recoRandomList.value = menuRepository.getRecommendFoodListByCategories(category,0,false,"RAND",false, 5)
+            }
         }
     }
-
-
-    fun filterRecoRandomByCategory(index: Int) =
-        _recoRandomList.value?.filter { data ->
-            if (index == 0) true else data.categories.any { it == categories.value!![index] }
-        }
-
 
     fun updateMyFoodLike(food: RecommendFood, index: Int){
         val newFood = RecommendFood(food.id, food.name, food.thumbnail, !food.isLike, food.lastEatDate, food.categories)

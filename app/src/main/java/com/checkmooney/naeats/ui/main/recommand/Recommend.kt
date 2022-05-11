@@ -95,9 +95,9 @@ fun TodayRecommend(viewModel: MainViewModel = viewModel()) {
                             viewModel.initCategoryIndex()
                             selectedCategoryIndex.value = 0
                             when (selectedTab) {
-                                RecommendTab.ByCoolTime -> viewModel.getRecoCoolTimeList("전체")
-                                RecommendTab.ByFavorite -> viewModel.getAllRecoFavoriteList()
-                                RecommendTab.ByRandom -> viewModel.getAllRecoRandomList()
+                                RecommendTab.ByCoolTime -> viewModel.getRecoCoolTimeList()
+                                RecommendTab.ByFavorite -> viewModel.getRecoFavoriteList()
+                                RecommendTab.ByRandom -> viewModel.getRecoRandomList()
                             }
                         },
                         selectedContentColor = ChoicePink,
@@ -158,7 +158,17 @@ fun MenuCategory(
                         selectedTabIndex.value = index
                         viewModel.updateCategoryIndex(index)
                         if(selectedTabIndex.value == 0){
-                            viewModel.getRecoCoolTimeList("전체") // 수정 -> 모든 추천으로
+                            when (selectedTab.ordinal) {
+                                0 -> {
+                                    viewModel.getRecoCoolTimeList()
+                                }
+                                1 -> {
+                                    viewModel.getRecoFavoriteList()
+                                }
+                                else -> {
+                                    viewModel.getRecoRandomList()
+                                }
+                            }
                         }
                         viewModel.categoryIndex.value?.let {
                             when (selectedTab.ordinal) {
@@ -166,10 +176,10 @@ fun MenuCategory(
                                     viewModel.getRecoCoolTimeList(viewModel.categories.value!![it])
                                 }
                                 1 -> {
-                                    viewModel.getRecoCoolTimeList(viewModel.categories.value!![it])
+                                    viewModel.getRecoFavoriteList(viewModel.categories.value!![it])
                                 }
                                 else -> {
-                                    viewModel.getRecoCoolTimeList(viewModel.categories.value!![it])
+                                    viewModel.getRecoRandomList(viewModel.categories.value!![it])
                                 }
                             }
                         }
