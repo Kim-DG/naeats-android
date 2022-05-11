@@ -22,6 +22,12 @@ class MenuRepository @Inject constructor(
         return res?.recommends ?: mutableListOf()
     }
 
+    suspend fun getRecommendFoodListByCategories(category: String, day: Int, isEat: Boolean, order: String, isLike: Boolean, limit: Int): MutableList<RecommendFood> {
+        val res = menuRemoteDataSource.getRecommendFoodList(category = category, day = day, isEat = isEat, order = order, isLike = isLike, limit = limit)
+
+        return res?.recommends ?: mutableListOf()
+    }
+
     suspend fun getCategories(): List<String> {
         val defaultList = listOf("전체")
         val res = menuRemoteDataSource.getCategoryList()

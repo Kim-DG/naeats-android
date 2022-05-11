@@ -50,7 +50,7 @@ class MainViewModel @Inject constructor(
                     getAllList()
                     getAllRecoRandomList()
                     getAllRecoFavoriteList()
-                    getAllRecoCoolTimeList()
+                    getRecoCoolTimeList("전체")
                 }
             }
             NavigationItem.Setting -> {
@@ -116,10 +116,15 @@ class MainViewModel @Inject constructor(
         }
 
     // Recommend
-    fun getAllRecoCoolTimeList() {
+    fun getRecoCoolTimeList(category: String) {
         viewModelScope.launch {
             _recoCoolTimeList.value = mutableListOf()
-            _recoCoolTimeList.value = menuRepository.getRecommendFoodList(0,true,"ASC",false, 5)
+            if(category == "전체"){
+                _recoCoolTimeList.value = menuRepository.getRecommendFoodList(0,true,"ASC",false, 5)
+            }
+            else{
+                _recoCoolTimeList.value = menuRepository.getRecommendFoodListByCategories(category,0,true,"ASC",false, 5)
+            }
         }
     }
 
@@ -135,7 +140,6 @@ class MainViewModel @Inject constructor(
             _recoFavoriteList.value = menuRepository.getRecommendFoodList(0,false,"RAND",true, 5)
         }
     }
-
 
     fun filterRecoFavoriteByCategory(index: Int) =
         _recoFavoriteList.value?.filter { data ->

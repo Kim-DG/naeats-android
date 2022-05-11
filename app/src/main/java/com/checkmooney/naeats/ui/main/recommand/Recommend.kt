@@ -95,7 +95,7 @@ fun TodayRecommend(viewModel: MainViewModel = viewModel()) {
                             viewModel.initCategoryIndex()
                             selectedCategoryIndex.value = 0
                             when (selectedTab) {
-                                RecommendTab.ByCoolTime -> viewModel.getAllRecoCoolTimeList()
+                                RecommendTab.ByCoolTime -> viewModel.getRecoCoolTimeList("전체")
                                 RecommendTab.ByFavorite -> viewModel.getAllRecoFavoriteList()
                                 RecommendTab.ByRandom -> viewModel.getAllRecoRandomList()
                             }
@@ -134,7 +134,6 @@ fun MenuCategory(
     foodList: MutableList<RecommendFood>,
     viewModel: MainViewModel = viewModel(),
 ) {
-    val filterList = remember { mutableStateListOf<RecommendFood>() }
     Column {
         ScrollableTabRow(
             contentColor = ChoicePink,
@@ -158,22 +157,21 @@ fun MenuCategory(
                     onClick = {
                         selectedTabIndex.value = index
                         viewModel.updateCategoryIndex(index)
-                        val filter = viewModel.categoryIndex.value?.let {
+                        if(selectedTabIndex.value == 0){
+                            viewModel.getRecoCoolTimeList("전체") // 수정 -> 모든 추천으로
+                        }
+                        viewModel.categoryIndex.value?.let {
                             when (selectedTab.ordinal) {
                                 0 -> {
-                                    viewModel.filterRecoCoolTimeByCategory(it)
+                                    viewModel.getRecoCoolTimeList(viewModel.categories.value!![it])
                                 }
                                 1 -> {
-                                    viewModel.filterRecoFavoriteByCategory(it)
+                                    viewModel.getRecoCoolTimeList(viewModel.categories.value!![it])
                                 }
                                 else -> {
-                                    viewModel.filterRecoRandomByCategory(it)
+                                    viewModel.getRecoCoolTimeList(viewModel.categories.value!![it])
                                 }
                             }
-                        }
-                        filterList.clear()
-                        filter!!.forEach {
-                            filterList.add(it)
                         }
                     },
                     selectedContentColor = ChoicePink,
@@ -185,7 +183,7 @@ fun MenuCategory(
             RecommendWindow(foodList, selectedTab.ordinal)
         }
         else{
-            RecommendWindow(filterList, selectedTab.ordinal)
+            RecommendWindow(foodList, selectedTab.ordinal)
         }
     }
 }

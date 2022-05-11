@@ -26,6 +26,17 @@ interface MainApiService {
         @Query("isLike") isLike:Boolean
     ): Call<RecommendFoodsResponse>
 
+    @GET("recommends")
+    fun getRecommendFoodsByCategories(
+        @Query("page") page: Int = 1,
+        @Query("limit") limit: Int,
+        @Query("categories") categories: String,
+        @Query("day") day: Int,
+        @Query("isEat") isEat: Boolean,
+        @Query("orderBy") order: String,
+        @Query("isLike") isLike:Boolean
+    ): Call<RecommendFoodsResponse>
+
     @GET("foods/like")
     fun getLikeFoods(): Call<GetFavoriteFoodsResponse> //
 
