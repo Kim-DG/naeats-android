@@ -80,7 +80,7 @@ class MainViewModel @Inject constructor(
 
     private val _categorizedFoodList = MutableLiveData<MutableList<FoodData>>()
     val categorizedList: LiveData<MutableList<FoodData>>
-        get() = _allList
+        get() = _categorizedFoodList
 
     private val _recoCoolTimeList = MutableLiveData<MutableList<RecommendFood>>()
     val recoCoolTimeList: LiveData<MutableList<RecommendFood>>
@@ -180,7 +180,13 @@ class MainViewModel @Inject constructor(
     }
 
         // Today Eats
+
+    private var previousCategory = ""
+
     fun filterMenuByCategory(category: String) {
+        if (previousCategory == category) return
+
+        previousCategory = category
         viewModelScope.launch {
             val foodData = menuRepository.getFoodListByCategory(category)
             _categorizedFoodList.value = foodData.toMutableList()

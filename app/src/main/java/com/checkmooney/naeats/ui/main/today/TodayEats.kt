@@ -1,5 +1,6 @@
 package com.checkmooney.naeats.ui.main.today
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -43,27 +44,25 @@ fun TodayEats(viewModel: MainViewModel = viewModel()) {
     NaEatsTheme() {
         Column {
             Tab(selectedTab) { selectedTab = it }
-            viewModel.allList.observeAsState().value?.let { it ->
-                when (selectedTab) {
-                    TodayEatsTab.ByKeyword -> SearchByKeyword(
-                        menuList = it,
-                        onItemClicked = {
-                            openDialog = true
-                            tmpFoodId = it
-                        }
-                    )
-                    TodayEatsTab.ByCategory -> SearchByCategory(
-                        allCategory = viewModel.categories.value!!,
-                        categorizedFoods = viewModel.categorizedList.observeAsState().value,
-                        onCategoryChanged = { category ->
-                            viewModel.filterMenuByCategory(category)
-                        },
-                        onItemClicked = {
-                            openDialog = true
-                            tmpFoodId = it
-                        }
-                    )
-                }
+            when (selectedTab) {
+                TodayEatsTab.ByKeyword -> SearchByKeyword(
+                    menuList = viewModel.allList.observeAsState().value,
+                    onItemClicked = {
+                        openDialog = true
+                        tmpFoodId = it
+                    }
+                )
+                TodayEatsTab.ByCategory -> SearchByCategory(
+                    allCategory = viewModel.categories.value!!,
+                    categorizedFoods = viewModel.categorizedList.observeAsState().value,
+                    onCategoryChanged = { category ->
+                        viewModel.filterMenuByCategory(category)
+                    },
+                    onItemClicked = {
+                        openDialog = true
+                        tmpFoodId = it
+                    }
+                )
             }
         }
     }
@@ -117,15 +116,15 @@ fun Tab(selectedTab: TodayEatsTab, onClick: (TodayEatsTab) -> Unit = {}) {
 
 @Composable
 fun SearchByKeyword(
-    menuList: List<FoodData>,
+    menuList: List<FoodData>?,
     onItemClicked: (String) -> Unit = {}
 ) {
     var searchText by rememberSaveable { mutableStateOf("") }
     val searchList =
-        menuList.filter { food -> food.name.contains(searchText) }.sortedBy { it.name }
+        menuList?.filter { food -> food.name.contains(searchText) }?.sortedBy { it.name }
     Column {
         SearchBar(searchText) { searchText = it }
-        ListView(searchList) {
+        ListView(searchList ?: listOf()) {
             onItemClicked(it)
         }
     }
@@ -207,7 +206,7 @@ fun ListView(list: List<FoodData>, onItemClick: (String) -> Unit = {}) {
                 .clickable { onItemClick(item.id) }
                 .background(MaterialTheme.colors.background)
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 24.dp))
+                .padding(horizontal = 20.dp, vertical = 19.dp))
         }
     }
 }
@@ -254,6 +253,9 @@ fun SearchByCategory(
                 }
             }
             else -> {
+                BackHandler {
+                    selectedCategory = "전체"
+                }
                 onCategoryChanged(selectedCategory)
 
                 Row(
@@ -274,7 +276,9 @@ fun SearchByCategory(
                         )
                     }
                 }
-                ListView(list = categorizedFoods ?: listOf()) { onItemClicked(it) }
+                if (categorizedFoods?.first()?.categories?.contains(selectedCategory) == true) {
+                    ListView(list = categorizedFoods.sortedBy { it.name }) { onItemClicked(it) }
+                }
             }
         }
     }
